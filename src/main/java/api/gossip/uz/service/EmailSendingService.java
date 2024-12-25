@@ -1,5 +1,6 @@
 package api.gossip.uz.service;
 
+import api.gossip.uz.util.JwtUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,8 +20,10 @@ public class EmailSendingService {
 
     public void sendRegistrationEmail(String mail, Integer profileId) {
         /*    */
-        String subject = "Greetings from Uzkassa";
-        String body = "qandaysz ustoz?)" + profileId;
+        String subject = "Complete registration";
+        String body = "Please click to link for completing to registration: http://localhost:8080/api/auths/registration/verification/%s" + profileId;
+        body = String.format(body, JwtUtil.encode(profileId));
+        System.out.println("profile Id is -> " + JwtUtil.encode(profileId));
         sendEmail(mail, subject, body);
     }
 

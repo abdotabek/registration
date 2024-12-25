@@ -7,10 +7,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auths")
@@ -22,6 +19,11 @@ public class AuthController {
     @PostMapping("/registration")
     public ResponseEntity<String> registration(@Valid @RequestBody RegistrationDTO registrationDTO) {
         return ResponseEntity.ok(authService.registration(registrationDTO));
+    }
+
+    @GetMapping("/registration/verification/{token}")
+    public ResponseEntity<String> regVerification(@PathVariable("token") String token) {
+        return ResponseEntity.ok(authService.regVerification(token));
     }
 
 }

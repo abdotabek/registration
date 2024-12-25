@@ -36,6 +36,11 @@ public class ProfileService {
                 () -> ExceptionUtil.throwNotFoundException("profile with id does not exist!"));
     }
 
+    public ProfileEntity getVerification(Integer id) {
+        return profileRepository.findByIdAndVisibleTrue(id).orElseThrow(() -> ExceptionUtil.throwNotFoundException("profile with does not exist!"));
+    }
+
+
     public List<ProfileDTO> getList() {
         return profileRepository.findAll().stream().map(this::toDTO).toList();
     }

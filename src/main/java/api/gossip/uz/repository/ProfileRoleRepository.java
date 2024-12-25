@@ -11,4 +11,5 @@ public interface ProfileRoleRepository extends JpaRepository<ProfileRoleEntity, 
     @Transactional
     @Modifying
     void deleteByProfileId(Integer profileId);
+
 }

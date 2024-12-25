@@ -21,13 +21,6 @@ public class ProfileRoleService {
     ProfileRoleRepository profileRoleRepository;
     ProfileRoleMapper mapper;
 
-    /*public ProfileRoleDTO create(ProfileRoleDTO profileRoleDTO) {
-        var profileRole = new ProfileRoleEntity();
-        profileRole.setProfileId(profileRoleDTO.getProfileId());
-        profileRole.setRoles(profileRoleDTO.getRoles());
-        profileRole.setCreatedDate(LocalDateTime.now());
-        return mapper.toDTO(profileRoleRepository.save(profileRole));
-    }*/
     public void create(Integer profileId, ProfileRole profileRole) {
         ProfileRoleEntity profileRoleEntity = new ProfileRoleEntity();
         profileRoleEntity.setProfileId(profileId);

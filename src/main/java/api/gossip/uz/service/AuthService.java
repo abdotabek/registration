@@ -1,11 +1,15 @@
 package api.gossip.uz.service;
 
+import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.RegistrationDTO;
 import api.gossip.uz.entity.ProfileEntity;
 import api.gossip.uz.enums.GeneralStatus;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.ProfileRepository;
+import api.gossip.uz.repository.mapper.ProfileMapper;
+import api.gossip.uz.util.JwtUtil;
+import io.jsonwebtoken.JwtException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +27,7 @@ public class AuthService {
     BCryptPasswordEncoder bCryptPasswordEncoder;
     ProfileRoleService profileRoleService;
     EmailSendingService emailSendingService;
+    ProfileService profileService;
 
     public String registration(RegistrationDTO registrationDTO) {
         //1. validation
@@ -53,4 +58,19 @@ public class AuthService {
         return "successfully registration";
     }
 
+    public String regVerification(String token) {
+        try {
+            Integer profileId = JwtUtil.decodeRegVerToken(token);
+
+            ProfileEntity profile = profileService.getVerification(profileId);
+            if (profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)) {
+                // ACTIVE
+                profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
+                return "Verification successful";
+            }
+        } catch (JwtException e) {
+
+        }
+        throw ExceptionUtil.throwConflictException("Registration failed: User is blocked.");
+    }
 }
