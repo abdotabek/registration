@@ -18,8 +18,9 @@ public class EmailSendingService {
     final JavaMailSender javaMailSender;
 
     public void sendRegistrationEmail(String mail, Integer profileId) {
-        String subject = "Complete Registration";
-        String body = "Registration Email. Please click to link:" + profileId;
+        /*    */
+        String subject = "Greetings from Uzkassa";
+        String body = "qandaysz ustoz?)" + profileId;
         sendEmail(mail, subject, body);
     }
 

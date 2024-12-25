@@ -1,6 +1,5 @@
 package api.gossip.uz.controller;
 
-import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.ProfileRoleDTO;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.service.ProfileRoleService;
@@ -19,10 +18,7 @@ import java.util.List;
 public class ProfileRoleController {
     ProfileRoleService profileRoleService;
 
-    /*@PostMapping
-    public ResponseEntity<ProfileRoleDTO> create(@RequestBody ProfileRoleDTO profileDTO) {
-        return ResponseEntity.ok(profileRoleService.create(profileDTO));
-    }*/
+
     @PostMapping("/{id}")
     public ResponseEntity<Void> create(@PathVariable("id") Integer id, @RequestBody ProfileRole profileRole) {
         profileRoleService.create(id, profileRole);
