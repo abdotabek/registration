@@ -1,0 +1,23 @@
+GET localhost:8080/api/profiles
+Content-Type: application/json
+
+
+{
+  "name": "ali",
+  "password": "12345",
+  "visible": true,
+  "status": "ACTIVE",
+  "username": "+998937877405"
+}
+
+###
+POST localhost:8080/api/profile-roles
+Content-Type: application/json
+
+{
+  "profileId": 1,
+  "roles": "ROLE_USER"
+}
+
+###
+POST localhost:8080
