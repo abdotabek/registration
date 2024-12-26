@@ -16,14 +16,16 @@ public class EmailSendingService {
     @Value("${spring.mail.username}")
     String fromAccount;
 
+    @Value("${server.domain}")
+    String serverDomain;
+
     final JavaMailSender javaMailSender;
 
     public void sendRegistrationEmail(String mail, Integer profileId) {
         /*    */
         String subject = "Complete registration";
-        String body = "Please click to link for completing to registration: http://localhost:8080/api/auths/registration/verification/%s";
-        body = String.format(body, JwtUtil.encode(profileId));
-//        System.out.println("profile Id is -> "+JwtUtil.encode(profileId));
+        String body = "Please click to link for completing to registration: %s/api/auths/registration/verification/%s";
+        body = String.format(body, serverDomain, JwtUtil.encode(profileId));
         sendEmail(mail, subject, body);
     }
 
