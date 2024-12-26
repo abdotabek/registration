@@ -21,9 +21,9 @@ public class EmailSendingService {
     public void sendRegistrationEmail(String mail, Integer profileId) {
         /*    */
         String subject = "Complete registration";
-        String body = "Please click to link for completing to registration: http://localhost:8080/api/auths/registration/verification/%s" + profileId;
+        String body = "Please click to link for completing to registration: http://localhost:8080/api/auths/registration/verification/%s";
         body = String.format(body, JwtUtil.encode(profileId));
-        System.out.println("profile Id is -> " + JwtUtil.encode(profileId));
+//        System.out.println("profile Id is -> "+JwtUtil.encode(profileId));
         sendEmail(mail, subject, body);
     }
 

@@ -2,10 +2,10 @@ package api.gossip.uz.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 
 public class JwtUtil {
@@ -30,9 +30,10 @@ public class JwtUtil {
                 .verifyWith(getSignInKey())
                 .build()
                 .parseSignedClaims(token)
-                .getBody();
+                .getPayload();
         return Integer.valueOf(claims.getSubject());
     }
+
 
     public static boolean isValid(String token) {
 
@@ -47,9 +48,8 @@ public class JwtUtil {
 
 
     private static SecretKey getSignInKey() {
-        SignatureAlgorithm sa = SignatureAlgorithm.HS256;
-        return new SecretKeySpec(secretKey.getBytes(), sa.getJcaName());
+        byte[] ketBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(ketBytes);
     }
-
 
 }
