@@ -1,11 +1,14 @@
 package api.gossip.uz.service;
 
+import api.gossip.uz.dto.AuthDTO;
+import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.RegistrationDTO;
 import api.gossip.uz.entity.ProfileEntity;
 import api.gossip.uz.enums.GeneralStatus;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.ProfileRepository;
+import api.gossip.uz.repository.ProfileRoleRepository;
 import api.gossip.uz.util.JwtUtil;
 import io.jsonwebtoken.JwtException;
 import lombok.AccessLevel;
@@ -26,6 +29,7 @@ public class AuthService {
     ProfileRoleService profileRoleService;
     EmailSendingService emailSendingService;
     ProfileService profileService;
+    ProfileRoleRepository profileRoleRepository;
 
     public String registration(RegistrationDTO registrationDTO) {
         //1. validation
@@ -70,5 +74,25 @@ public class AuthService {
             System.out.println("error");
         }
         throw ExceptionUtil.throwConflictException("Registration failed: User is blocked.");
+    }
+
+    public ProfileDTO login(AuthDTO authDTO) {
+        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(authDTO.getUsername());
+        if (optional.isEmpty()) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("Username or password is wrong");
+        }
+        ProfileEntity profile = optional.get();
+        if (!bCryptPasswordEncoder.matches(authDTO.getPassword(), profile.getPassword())) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("Username or password is wrong");
+        }
+        if (GeneralStatus.ACTIVE != profile.getStatus()) {
+            throw ExceptionUtil.throwConflictException("wrong status");
+        }
+        ProfileDTO response = new ProfileDTO();
+        response.setName(profile.getName());
+        response.setUsername(profile.getUsername());
+        response.setRoleList(profileRoleRepository.getAllRolesListByProfileId(profile.getId()));
+        response.setJwt(JwtUtil.encode(profile.getId(), response.getRoleList()));
+        return response;
     }
 }

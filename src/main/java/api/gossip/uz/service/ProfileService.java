@@ -20,7 +20,7 @@ public class ProfileService {
     ProfileRepository profileRepository;
     ProfileMapper mapper;
 
-    public ProfileDTO create(ProfileDTO profileDTO) {
+    /*public ProfileDTO create(ProfileDTO profileDTO) {
         ProfileEntity profileEntity = new ProfileEntity();
         profileEntity.setName(profileDTO.getName());
         profileEntity.setUsername(profileDTO.getUsername());
@@ -29,7 +29,7 @@ public class ProfileService {
         profileEntity.setVisible(profileDTO.getVisible());
         profileEntity.setCreatedDate(LocalDateTime.now());
         return mapper.toDTO(profileRepository.save(profileEntity));
-    }
+    }*/
 
     public ProfileDTO get(Integer id) {
         return profileRepository.findById(id).map(mapper::toDTO).orElseThrow(
@@ -41,11 +41,11 @@ public class ProfileService {
     }
 
 
-    public List<ProfileDTO> getList() {
+    /*public List<ProfileDTO> getList() {
         return profileRepository.findAll().stream().map(this::toDTO).toList();
-    }
+    }*/
 
-    public ProfileDTO update(Integer id, ProfileDTO profileDTO) {
+  /*  public ProfileDTO update(Integer id, ProfileDTO profileDTO) {
         profileRepository.findById(id)
                 .map(profileEntity -> {
                     profileEntity.setName(profileDTO.getName());
@@ -58,13 +58,13 @@ public class ProfileService {
                     return profileEntity.getId();
                 }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("profile with id does not exist!"));
         return profileDTO;
-    }
+    }*/
 
     public void delete(Integer id) {
         profileRepository.deleteById(id);
     }
 
-    private ProfileDTO toDTO(ProfileEntity profileEntity) {
+  /*  private ProfileDTO toDTO(ProfileEntity profileEntity) {
         ProfileDTO profileDTO = new ProfileDTO();
         profileDTO.setId(profileEntity.getId());
         profileDTO.setName(profileEntity.getName());
@@ -74,5 +74,5 @@ public class ProfileService {
         profileDTO.setVisible(profileEntity.getVisible());
         profileDTO.setCreatedDate(profileEntity.getCreatedDate());
         return profileDTO;
-    }
+    }*/
 }

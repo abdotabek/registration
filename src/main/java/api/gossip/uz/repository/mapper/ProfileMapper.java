@@ -8,6 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ProfileMapper extends BaseMapper<ProfileDTO, ProfileEntity> {
 
-    @Mapping(target = "visible", defaultValue = "true")
+//    @Mapping(target = "visible", defaultValue = "true")
     ProfileDTO toDTO(ProfileEntity entity);
 }

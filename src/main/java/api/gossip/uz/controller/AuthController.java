@@ -1,5 +1,7 @@
 package api.gossip.uz.controller;
 
+import api.gossip.uz.dto.AuthDTO;
+import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.RegistrationDTO;
 import api.gossip.uz.service.AuthService;
 import jakarta.validation.Valid;
@@ -24,6 +26,12 @@ public class AuthController {
     @GetMapping("/registration/verification/{token}")
     public ResponseEntity<String> regVerification(@PathVariable("token") String token) {
         return ResponseEntity.ok(authService.regVerification(token));
+    }
+
+    //login
+    @PostMapping("/login")
+    public ResponseEntity<ProfileDTO> login(@RequestBody AuthDTO authDTO) {
+        return ResponseEntity.ok(authService.login(authDTO));
     }
 
 }

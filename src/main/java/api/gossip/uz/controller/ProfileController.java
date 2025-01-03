@@ -17,20 +17,22 @@ import java.util.List;
 public class ProfileController {
     ProfileService profileService;
 
-    @PostMapping
+   /* @PostMapping
     public ResponseEntity<ProfileDTO> create(@RequestBody ProfileDTO profileDTO) {
         return ResponseEntity.ok(profileService.create(profileDTO));
     }
-
+*/
     @GetMapping("/{id}")
     public ResponseEntity<ProfileDTO> get(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(profileService.get(id));
     }
+/*
 
     @GetMapping
     public ResponseEntity<List<ProfileDTO>> getList() {
         return ResponseEntity.ok(profileService.getList());
     }
+*/
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
