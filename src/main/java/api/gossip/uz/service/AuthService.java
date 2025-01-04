@@ -58,12 +58,12 @@ public class AuthService {
         profileRepository.save(profileEntity);     //save
         //insert Role
         profileRoleService.create(profileEntity.getId(), ProfileRole.ROLE_USER);
-        emailSendingService.sendRegistrationEmail(registrationDTO.getUsername(), profileEntity.getId());
+        emailSendingService.sendRegistrationEmail(registrationDTO.getUsername(), profileEntity.getId(), language);
 
         return new AppResponse<String>(bundleService.getMessage("email.confirm.send", language));
     }
 
-    public AppResponse<String> regVerification(String token, AppLanguage language) {
+    public String regVerification(String token, AppLanguage language) {
         try {
             Integer profileId = JwtUtil.decodeRegVerToken(token);
 
@@ -71,7 +71,7 @@ public class AuthService {
             if (profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)) {
                 // ACTIVE
                 profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
-                return new AppResponse<>(bundleService.getMessage("email.ver.success", language));
+                return bundleService.getMessage("email.ver.success", language);
             }
         } catch (JwtException e) {
             System.out.println("error");
@@ -79,24 +79,23 @@ public class AuthService {
         throw ExceptionUtil.throwConflictException(bundleService.getMessage("reg.failed.user.block", language));
     }
 
-    public AppResponse<ProfileDTO> login(AuthDTO authDTO, AppLanguage language) {
+    public ProfileDTO login(AuthDTO authDTO, AppLanguage language) {
         Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(authDTO.getUsername());
         if (optional.isEmpty()) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("user.password.wrong", language));
+            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("username.password.wrong", language));
         }
         ProfileEntity profile = optional.get();
         if (!bCryptPasswordEncoder.matches(authDTO.getPassword(), profile.getPassword())) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("user.password.wrong", language));
+            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("username.password.wrong", language));
         }
         if (GeneralStatus.ACTIVE != profile.getStatus()) {
-            throw ExceptionUtil.throwConflictException(bundleService.getMessage("user.status", language));
+            throw ExceptionUtil.throwConflictException(bundleService.getMessage("username.status", language));
         }
         ProfileDTO response = new ProfileDTO();
         response.setName(profile.getName());
         response.setUsername(profile.getUsername());
         response.setRoleList(profileRoleRepository.getAllRolesListByProfileId(profile.getId()));
         response.setJwt(JwtUtil.encode(profile.getUsername(), profile.getId(), response.getRoleList()));
-//        return response;
-        return new AppResponse<>(response);
+        return response;
     }
 }

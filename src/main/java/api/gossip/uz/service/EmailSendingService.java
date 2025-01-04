@@ -1,5 +1,6 @@
 package api.gossip.uz.service;
 
+import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.util.JwtUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -26,11 +27,11 @@ public class EmailSendingService {
 
     final JavaMailSender javaMailSender;
 
-    public void sendRegistrationEmail(String mail, Integer profileId) {
+    public void sendRegistrationEmail(String mail, Integer profileId, AppLanguage language) {
         /*    */
         String subject = "Complete registration";
-        String body = "Please click to link for completing to registration: %s/api/auths/registration/verification/%s";
-        body = String.format(body, serverDomain, JwtUtil.encode(profileId));
+        String body = "Please click to link for completing to registration: %s/api/auths/registration/verification/%s?language=%s";
+        body = String.format(body, serverDomain, JwtUtil.encode(profileId), language.name());
         sendEmail(mail, subject, body);
     }
 
