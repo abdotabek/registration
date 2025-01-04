@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "profile_role")
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class ProfileRoleEntity extends BaseEntity {
 
     @Column(name = "profile_id")

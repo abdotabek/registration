@@ -1,9 +1,11 @@
 package api.gossip.uz.service;
 
+import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.AuthDTO;
 import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.RegistrationDTO;
 import api.gossip.uz.entity.ProfileEntity;
+import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.GeneralStatus;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
@@ -30,8 +32,9 @@ public class AuthService {
     EmailSendingService emailSendingService;
     ProfileService profileService;
     ProfileRoleRepository profileRoleRepository;
+    ResourceBundleService bundleService;
 
-    public String registration(RegistrationDTO registrationDTO) {
+    public AppResponse<String> registration(RegistrationDTO registrationDTO, AppLanguage language) {
         //1. validation
         //2. check for email
         Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(registrationDTO.getUsername());
@@ -42,7 +45,7 @@ public class AuthService {
                 profileRepository.delete(profile);
                 // send sms/email
             } else {
-                throw ExceptionUtil.throwConflictException("username already exists!");
+                throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
             }
         }
         ProfileEntity profileEntity = new ProfileEntity();
@@ -57,10 +60,10 @@ public class AuthService {
         profileRoleService.create(profileEntity.getId(), ProfileRole.ROLE_USER);
         emailSendingService.sendRegistrationEmail(registrationDTO.getUsername(), profileEntity.getId());
 
-        return "successfully registration";
+        return new AppResponse<String>(bundleService.getMessage("email.confirm.send", language));
     }
 
-    public String regVerification(String token) {
+    public AppResponse<String> regVerification(String token, AppLanguage language) {
         try {
             Integer profileId = JwtUtil.decodeRegVerToken(token);
 
@@ -68,31 +71,32 @@ public class AuthService {
             if (profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)) {
                 // ACTIVE
                 profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
-                return "Verification successful";
+                return new AppResponse<>(bundleService.getMessage("email.ver.success", language));
             }
         } catch (JwtException e) {
             System.out.println("error");
         }
-        throw ExceptionUtil.throwConflictException("Registration failed: User is blocked.");
+        throw ExceptionUtil.throwConflictException(bundleService.getMessage("reg.failed.user.block", language));
     }
 
-    public ProfileDTO login(AuthDTO authDTO) {
+    public AppResponse<ProfileDTO> login(AuthDTO authDTO, AppLanguage language) {
         Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(authDTO.getUsername());
         if (optional.isEmpty()) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException("Username or password is wrong");
+            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("user.password.wrong", language));
         }
         ProfileEntity profile = optional.get();
         if (!bCryptPasswordEncoder.matches(authDTO.getPassword(), profile.getPassword())) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException("Username or password is wrong");
+            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("user.password.wrong", language));
         }
         if (GeneralStatus.ACTIVE != profile.getStatus()) {
-            throw ExceptionUtil.throwConflictException("wrong status");
+            throw ExceptionUtil.throwConflictException(bundleService.getMessage("user.status", language));
         }
         ProfileDTO response = new ProfileDTO();
         response.setName(profile.getName());
         response.setUsername(profile.getUsername());
         response.setRoleList(profileRoleRepository.getAllRolesListByProfileId(profile.getId()));
-        response.setJwt(JwtUtil.encode(profile.getId(), response.getRoleList()));
-        return response;
+        response.setJwt(JwtUtil.encode(profile.getUsername(), profile.getId(), response.getRoleList()));
+//        return response;
+        return new AppResponse<>(response);
     }
 }

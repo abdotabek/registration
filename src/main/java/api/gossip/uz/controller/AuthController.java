@@ -1,8 +1,10 @@
 package api.gossip.uz.controller;
 
+import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.AuthDTO;
 import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.RegistrationDTO;
+import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -19,19 +21,22 @@ public class AuthController {
     AuthService authService;
 
     @PostMapping("/registration")
-    public ResponseEntity<String> registration(@Valid @RequestBody RegistrationDTO registrationDTO) {
-        return ResponseEntity.ok(authService.registration(registrationDTO));
+    public ResponseEntity<AppResponse<String>> registration(@Valid @RequestBody RegistrationDTO registrationDTO,
+                                                            @RequestHeader("Accept-Language") AppLanguage language) {
+        return ResponseEntity.ok(authService.registration(registrationDTO, language));
     }
 
     @GetMapping("/registration/verification/{token}")
-    public ResponseEntity<String> regVerification(@PathVariable("token") String token) {
-        return ResponseEntity.ok(authService.regVerification(token));
+    public ResponseEntity<AppResponse<String>> regVerification(@PathVariable("token") String token,
+                                                               @RequestHeader("Accept-Language") AppLanguage language) {
+        return ResponseEntity.ok(authService.regVerification(token, language));
     }
 
     //login
     @PostMapping("/login")
-    public ResponseEntity<ProfileDTO> login(@RequestBody AuthDTO authDTO) {
-        return ResponseEntity.ok(authService.login(authDTO));
+    public ResponseEntity<AppResponse<ProfileDTO>> login(@RequestBody AuthDTO authDTO,
+                                                         @RequestHeader("Accept-Language") AppLanguage language) {
+        return ResponseEntity.ok(authService.login(authDTO, language));
     }
 
 }

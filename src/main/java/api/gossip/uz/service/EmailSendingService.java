@@ -1,13 +1,18 @@
 package api.gossip.uz.service;
 
 import api.gossip.uz.util.JwtUtil;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +32,23 @@ public class EmailSendingService {
         String body = "Please click to link for completing to registration: %s/api/auths/registration/verification/%s";
         body = String.format(body, serverDomain, JwtUtil.encode(profileId));
         sendEmail(mail, subject, body);
+    }
+
+    private void sendMimeEmail(String email, String subject, String body) {
+        try {
+            MimeMessage msg = javaMailSender.createMimeMessage();
+            msg.setFrom(fromAccount);
+
+            MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+            helper.setTo(email);
+            helper.setSubject(subject);
+            helper.setText(body);
+            CompletableFuture.runAsync(() -> {
+                javaMailSender.send(msg);
+            });
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void sendEmail(String mail, String subject, String body) {

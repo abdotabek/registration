@@ -1,5 +1,6 @@
 package api.gossip.uz.exception;
 
+import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import java.util.*;
 public class GlobalHandlerExceptionValidation extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+                                                                  @NonNull HttpHeaders headers, HttpStatusCode status, @NonNull WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", new Date());
         body.put("status", status.value());
