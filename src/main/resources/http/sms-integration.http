@@ -1,0 +1,8 @@
+### Eskiz login
+POST https://notify.eskiz.uz/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "abdulazizovotabek7405@gmail.com",
+  "password": "Dyl3TwsndejgTOZQKxojR5PXIwad3WJsCCIe5lmM"
+}
