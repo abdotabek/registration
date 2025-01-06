@@ -6,3 +6,14 @@ Content-Type: application/json
   "email": "abdulazizovotabek7405@gmail.com",
   "password": "Dyl3TwsndejgTOZQKxojR5PXIwad3WJsCCIe5lmM"
 }
+
+### Send message
+POST https://notify.eskiz.uz/api/message/sms/send
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzg2ODg3NTMsImlhdCI6MTczNjA5Njc1Mywicm9sZSI6InRlc3QiLCJzaWduIjoiMWI5YjAzY2QzNWE0Yzc4OTE2MGVmMzNkMTIzNmRkMmNlZTJjOWRkMzQ0OGFmN2Q1YTYzOTc3MmQ2YWNlYTJkZSIsInN1YiI6IjkzOTYifQ.l91PUbJFIH1z3hJ1yNT9lbL4FYepbdpdCDp84MCaL0Y
+
+{
+  "mobile_phone": "998937877405",
+  "message": "Bu Eskiz dan test",
+  "from": "4546"
+}

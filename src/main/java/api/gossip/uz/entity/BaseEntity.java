@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 @MappedSuperclass
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public abstract class BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
