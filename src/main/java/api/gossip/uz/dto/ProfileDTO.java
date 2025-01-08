@@ -12,6 +12,7 @@ import java.util.List;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProfileDTO {
+
     String name;
     String username; //email/phone
     List<ProfileRole> roleList;

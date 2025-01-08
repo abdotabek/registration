@@ -19,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmailSendingService {
+
     @Value("${spring.mail.username}")
     String fromAccount;
 

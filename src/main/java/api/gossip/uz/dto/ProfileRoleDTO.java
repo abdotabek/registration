@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProfileRoleDTO {
+
     Integer id;
     Integer profileId;
     ProfileRole roles;

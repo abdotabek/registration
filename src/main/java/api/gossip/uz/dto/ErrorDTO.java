@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ErrorDTO {
+
     String title;
     String message;
     HttpStatus status;

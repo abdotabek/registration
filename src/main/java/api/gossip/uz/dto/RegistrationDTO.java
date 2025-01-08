@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegistrationDTO {
+
     @NotBlank(message = "name required")
     String name;
     @NotBlank(message = "username required")

@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public class CommonDTO {
+
     Integer id;
     String name;
 }

@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SmsRequestDTO {
+
     String mobile_phone;
     String message;
     String from;

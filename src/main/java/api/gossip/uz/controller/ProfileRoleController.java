@@ -35,6 +35,11 @@ public class ProfileRoleController {
         return ResponseEntity.ok(profileRoleService.getList());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ProfileRoleDTO> update(@PathVariable("id") Integer id, @RequestBody ProfileRoleDTO profileRoleDTO) {
+        return ResponseEntity.ok(profileRoleService.update(id, profileRoleDTO));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         profileRoleService.delete(id);

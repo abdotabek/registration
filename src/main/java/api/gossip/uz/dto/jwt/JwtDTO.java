@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JwtDTO {
+
     String username;
     Integer id;
     List<ProfileRole> roleList;

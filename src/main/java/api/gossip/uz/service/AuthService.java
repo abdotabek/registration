@@ -26,6 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AuthService {
+
     ProfileRepository profileRepository;
     BCryptPasswordEncoder bCryptPasswordEncoder;
     ProfileRoleService profileRoleService;
@@ -60,7 +61,7 @@ public class AuthService {
         profileRoleService.create(profileEntity.getId(), ProfileRole.ROLE_USER);
         emailSendingService.sendRegistrationEmail(registrationDTO.getUsername(), profileEntity.getId(), language);
 
-        return new AppResponse<String>(bundleService.getMessage("email.confirm.send", language));
+        return new AppResponse<>(bundleService.getMessage("email.confirm.send", language));
     }
 
     public String regVerification(String token, AppLanguage language) {
