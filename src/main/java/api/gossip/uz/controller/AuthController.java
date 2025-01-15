@@ -4,6 +4,7 @@ import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.AuthDTO;
 import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.RegistrationDTO;
+import api.gossip.uz.dto.sms.SmsResendDTO;
 import api.gossip.uz.dto.sms.SmsVerificationDTO;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.service.AuthService;
@@ -27,9 +28,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.registration(registrationDTO, language));
     }
 
-    @GetMapping("/registration/email-verification/{token}")
+    @GetMapping("/registration/email-verification/{language}/{token}")
     public ResponseEntity<String> emailVerification(@PathVariable("token") String token,
-                                                    @RequestParam(value = "language", defaultValue = "UZ") AppLanguage language) {
+                                                    @RequestParam("language") AppLanguage language) {
         return ResponseEntity.ok(authService.registrationEmailVerification(token, language));
     }
 
@@ -37,6 +38,12 @@ public class AuthController {
     public ResponseEntity<ProfileDTO> smsVerification(@Valid @RequestBody SmsVerificationDTO smsVerificationDTO,
                                                       @RequestParam(value = "language", defaultValue = "UZ") AppLanguage language) {
         return ResponseEntity.ok(authService.registrationSmsVerification(smsVerificationDTO, language));
+    }
+
+    @PostMapping("/registration/sms-verification-resend")
+    public ResponseEntity<AppResponse<String>> smsVerificationResend(@Valid @RequestBody SmsResendDTO smsResendDTO,
+                                                                     @RequestParam(value = "language", defaultValue = "UZ") AppLanguage language) {
+        return ResponseEntity.ok(authService.registrationSmsVerificationResend(smsResendDTO, language));
     }
 
     //login

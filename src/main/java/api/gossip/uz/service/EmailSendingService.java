@@ -28,12 +28,12 @@ public class EmailSendingService {
 
     final JavaMailSender javaMailSender;
 
-    public void sendRegistrationEmail(String mail, Integer profileId, AppLanguage language) {
+    public void sendRegistrationEmail(String email, Integer profileId, AppLanguage language) {
         /*    */
         String subject = "Complete registration";
-        String body = "Please click to link for completing to registration: %s/api/auths/registration/email-verification/%s?language=%s";
+        String body = "Please click to link for completing to registration: %s/api/auths/registration/email-verification/%s/%s";
         body = String.format(body, serverDomain, JwtUtil.encode(profileId), language.name());
-        sendEmail(mail, subject, body);
+        sendEmail(email, subject, body);
     }
 
     private void sendMimeEmail(String email, String subject, String body) {

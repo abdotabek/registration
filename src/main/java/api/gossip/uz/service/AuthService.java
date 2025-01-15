@@ -4,6 +4,7 @@ import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.AuthDTO;
 import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.RegistrationDTO;
+import api.gossip.uz.dto.sms.SmsResendDTO;
 import api.gossip.uz.dto.sms.SmsVerificationDTO;
 import api.gossip.uz.entity.ProfileEntity;
 import api.gossip.uz.enums.AppLanguage;
@@ -12,8 +13,11 @@ import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.ProfileRepository;
 import api.gossip.uz.repository.ProfileRoleRepository;
+import api.gossip.uz.util.EmailUtil;
 import api.gossip.uz.util.JwtUtil;
+import api.gossip.uz.util.PhoneUtil;
 import io.jsonwebtoken.JwtException;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -62,8 +66,11 @@ public class AuthService {
         profileRepository.save(profileEntity);     //save
         //insert Role
         profileRoleService.create(profileEntity.getId(), ProfileRole.ROLE_USER);
-//        emailSendingService.sendRegistrationEmail(registrationDTO.getUsername(), profileEntity.getId(), language);
-        smsSendService.sendRegistration(registrationDTO.getUsername());
+        if (PhoneUtil.isPhone(registrationDTO.getUsername())) {
+            smsSendService.sendRegistration(registrationDTO.getUsername());
+        } else if (EmailUtil.isEmail(registrationDTO.getUsername())) {
+            emailSendingService.sendRegistrationEmail(registrationDTO.getUsername(), profileEntity.getId(), language);
+        }
         return new AppResponse<>(bundleService.getMessage("email.confirm.send", language));
     }
 
@@ -115,6 +122,20 @@ public class AuthService {
         return getLoginInResponse(profile);
     }
 
+    public AppResponse<String> registrationSmsVerificationResend(@Valid SmsResendDTO smsResendDTO, AppLanguage language) {
+        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(smsResendDTO.getPhone());
+        if (optional.isEmpty()) {
+            throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.not.found", language));
+        }
+        ProfileEntity profile = optional.get();
+        if (GeneralStatus.IN_REGISTRATION != profile.getStatus()) {
+            throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
+        }
+        //resend sms
+        smsSendService.sendRegistration(smsResendDTO.getPhone());
+        return new AppResponse<>(bundleService.getMessage("sms.resend", language));
+    }
+
     public ProfileDTO getLoginInResponse(ProfileEntity profile) {
         ProfileDTO response = new ProfileDTO();
         response.setName(profile.getName());
@@ -123,4 +144,5 @@ public class AuthService {
         response.setJwt(JwtUtil.encode(profile.getUsername(), profile.getId(), response.getRoleList()));
         return response;
     }
+
 }

@@ -21,9 +21,8 @@ Content-Type: application/json
 
 ###
 POST http://localhost:8080/api/auths/login
-Accept-Language: EN
 Content-Type: application/json
-Accept-Language: RU
+Accept-Language: EN
 
 {
   "username": "abdulazizovotabek7405@gmail.com",
@@ -49,7 +48,13 @@ Content-Type: application/json
   "phone": "998937877405",
   "code": "This is test from Eskiz"
 }
+###
 
-####
-GET http://localhost:8080/api/auths/registration/verification/eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OCIsImlhdCI6MTczNTk5MDg1MiwiZXhwIjoxNzM1OTkxMjEyfQ.islkXeNPMmikFyELnQa8iiSP6axCBIQqmXtQiE6bfVwP5PQaucFeVmO2fQ9YWQN2XgEzdZ-tc3mDYFPrLCZqIA
-Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7
+POST localhost:8080/api/auths/registration/sms-verification-resend
+Content-Type: application/json
+Accept-Language: RU
+
+{
+  "phone": "998937877405"
+}
+
