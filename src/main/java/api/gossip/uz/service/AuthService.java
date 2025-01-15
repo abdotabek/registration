@@ -4,6 +4,7 @@ import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.AuthDTO;
 import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.RegistrationDTO;
+import api.gossip.uz.dto.sms.SmsVerificationDTO;
 import api.gossip.uz.entity.ProfileEntity;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.GeneralStatus;
@@ -34,6 +35,8 @@ public class AuthService {
     ProfileService profileService;
     ProfileRoleRepository profileRoleRepository;
     ResourceBundleService bundleService;
+    SmsSendService smsSendService;
+    private final SmsHistoryService smsHistoryService;
 
     public AppResponse<String> registration(RegistrationDTO registrationDTO, AppLanguage language) {
         //1. validation
@@ -59,12 +62,12 @@ public class AuthService {
         profileRepository.save(profileEntity);     //save
         //insert Role
         profileRoleService.create(profileEntity.getId(), ProfileRole.ROLE_USER);
-        emailSendingService.sendRegistrationEmail(registrationDTO.getUsername(), profileEntity.getId(), language);
-
+//        emailSendingService.sendRegistrationEmail(registrationDTO.getUsername(), profileEntity.getId(), language);
+        smsSendService.sendRegistration(registrationDTO.getUsername());
         return new AppResponse<>(bundleService.getMessage("email.confirm.send", language));
     }
 
-    public String regVerification(String token, AppLanguage language) {
+    public String registrationEmailVerification(String token, AppLanguage language) {
         try {
             Integer profileId = JwtUtil.decodeRegVerToken(token);
 
@@ -77,21 +80,42 @@ public class AuthService {
         } catch (JwtException e) {
             System.out.println("error");
         }
-        throw ExceptionUtil.throwConflictException(bundleService.getMessage("reg.failed.user.block", language));
+        throw ExceptionUtil.throwConflictException(bundleService.getMessage("reg.failed.profile.block", language));
     }
 
     public ProfileDTO login(AuthDTO authDTO, AppLanguage language) {
         Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(authDTO.getUsername());
         if (optional.isEmpty()) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("username.password.wrong", language));
+            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("profile.password.wrong", language));
         }
         ProfileEntity profile = optional.get();
         if (!bCryptPasswordEncoder.matches(authDTO.getPassword(), profile.getPassword())) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("username.password.wrong", language));
+            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("profile.password.wrong", language));
         }
         if (GeneralStatus.ACTIVE != profile.getStatus()) {
-            throw ExceptionUtil.throwConflictException(bundleService.getMessage("username.status", language));
+            throw ExceptionUtil.throwConflictException(bundleService.getMessage("profile.status", language));
         }
+
+        return getLoginInResponse(profile);
+    }
+
+    public ProfileDTO registrationSmsVerification(SmsVerificationDTO smsVerificationDTO, AppLanguage language) {
+        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(smsVerificationDTO.getPhone());
+        if (optional.isEmpty()) {
+            throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.not.found", language));
+        }
+        ProfileEntity profile = optional.get();
+        if (GeneralStatus.IN_REGISTRATION != profile.getStatus()) {
+            throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
+        }
+
+        smsHistoryService.check(smsVerificationDTO.getPhone(), smsVerificationDTO.getCode(), language);
+
+        profileRepository.changeStatus(profile.getId(), GeneralStatus.ACTIVE);
+        return getLoginInResponse(profile);
+    }
+
+    public ProfileDTO getLoginInResponse(ProfileEntity profile) {
         ProfileDTO response = new ProfileDTO();
         response.setName(profile.getName());
         response.setUsername(profile.getUsername());

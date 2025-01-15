@@ -28,7 +28,13 @@ public class SecurityConfig {
     UserDetailsService userDetailsService;
     JwtAuthenticationFilter jwtAuthenticationFilter;
     public static final String[] AUTH_WHITELIST = {
-            "/api/auths/**"
+            "/api/auths/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v2/api-docs/**",
+            "/webjars/**",
+            "/swagger-resources/**"
     };
 
     @Bean

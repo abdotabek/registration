@@ -7,6 +7,7 @@ import api.gossip.uz.dto.sms.SmsSendResponseDTO;
 import api.gossip.uz.entity.SmsProviderTokenHolderEntity;
 import api.gossip.uz.enums.SmsType;
 import api.gossip.uz.repository.SmsProviderTokenHolderRepository;
+import api.gossip.uz.util.RandomUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -37,13 +38,29 @@ public class SmsSendService {
     String accountPassword;
 
 
-    public SmsSendResponseDTO sendSms(String phoneNumber, String message, SmsType smsType) {
-        SmsSendResponseDTO result = sendSms(phoneNumber, message, smsType);
-        smsHistoryService.create(phoneNumber, message, smsType);
-        return result;
+    private void sendSms(String phoneNumber, String message, String code, SmsType smsType) {
+        //check
+        Long count = smsHistoryService.getSmsCount(phoneNumber);
+        Long smsLimit = 3L;
+        if (count >= smsLimit) {
+            System.out.println("-----------Limit reached. Phone: " + phoneNumber);
+            throw new RuntimeException("Sms limit reached");
+        }
+        //send
+        sendSms(phoneNumber, message);
+        //save
+        smsHistoryService.create(phoneNumber, message, code, smsType);
     }
 
-    public SmsSendResponseDTO sendSms(String phoneNumber, String message) {
+    public void sendRegistration(String phoneNumber) {
+        String code = RandomUtil.getRandomSmsCode();
+        String message = "This is test from Eskiz";
+        message = String.format(message, code);
+        sendSms(phoneNumber, message, code, SmsType.REGISTRATION);
+
+    }
+
+    private SmsSendResponseDTO sendSms(String phoneNumber, String message) {
         //get token
         String token = getToken();
         //send sms
@@ -58,15 +75,15 @@ public class SmsSendService {
 
         HttpEntity<SmsRequestDTO> httpEntity = new HttpEntity<>(smsRequestDTO, headers);
         try {
-            String url = smsURL + "/message/sms/send";
-            ResponseEntity<SmsSendResponseDTO> response = restTemplate.exchange(url, HttpMethod.POST, httpEntity, SmsSendResponseDTO.class);
+            ResponseEntity<SmsSendResponseDTO> response =
+                    restTemplate.exchange(smsURL + "/message/sms/send", HttpMethod.POST, httpEntity, SmsSendResponseDTO.class);
             return response.getBody();
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String getToken() {
+    private String getToken() {
         Optional<SmsProviderTokenHolderEntity> optional = smsProviderTokenHolderRepository.findTop1By();
         if (optional.isEmpty()) {
             String token = getTokenFromProvider();
@@ -92,7 +109,7 @@ public class SmsSendService {
 
     }
 
-    public String getTokenFromProvider() {
+    private String getTokenFromProvider() {
         SmsAuthDTO smsAuthDTO = new SmsAuthDTO();
         smsAuthDTO.setEmail(accountLogin);
         smsAuthDTO.setPassword(accountPassword);

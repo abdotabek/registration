@@ -26,11 +26,17 @@ public class SmsHistoryEntity {
     @Column(name = "message", columnDefinition = "text")
     String message;
 
+    @Column(name = "code")
+    String code;
+
     @Column(name = "created_date")
     LocalDateTime createdDate;
 
     @Column(name = "sms_type")
     @Enumerated(EnumType.STRING)
     SmsType smsType;
+
+    @Column(name = "attempt_count")
+    Integer attemptCount = 0;
 
 }

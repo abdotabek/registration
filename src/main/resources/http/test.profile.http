@@ -37,8 +37,17 @@ Accept-Language: RU
 
 {
   "name": "otabek",
-  "username": "abdulazizovotabek7405@gmail.com",
+  "username": "998937877405",
   "password": "12345"
+}
+
+###
+POST localhost:8080/api/auths/registration/sms-verification
+Content-Type: application/json
+
+{
+  "phone": "998937877405",
+  "code": "This is test from Eskiz"
 }
 
 ####

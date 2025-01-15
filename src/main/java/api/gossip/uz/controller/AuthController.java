@@ -4,6 +4,7 @@ import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.AuthDTO;
 import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.RegistrationDTO;
+import api.gossip.uz.dto.sms.SmsVerificationDTO;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.service.AuthService;
 import jakarta.validation.Valid;
@@ -26,10 +27,16 @@ public class AuthController {
         return ResponseEntity.ok(authService.registration(registrationDTO, language));
     }
 
-    @GetMapping("/registration/verification/{token}")
-    public ResponseEntity<String> regVerification(@PathVariable("token") String token,
-                                                  @RequestParam(value = "language", defaultValue = "UZ") AppLanguage language) {
-        return ResponseEntity.ok(authService.regVerification(token, language));
+    @GetMapping("/registration/email-verification/{token}")
+    public ResponseEntity<String> emailVerification(@PathVariable("token") String token,
+                                                    @RequestParam(value = "language", defaultValue = "UZ") AppLanguage language) {
+        return ResponseEntity.ok(authService.registrationEmailVerification(token, language));
+    }
+
+    @PostMapping("/registration/sms-verification")
+    public ResponseEntity<ProfileDTO> smsVerification(@Valid @RequestBody SmsVerificationDTO smsVerificationDTO,
+                                                      @RequestParam(value = "language", defaultValue = "UZ") AppLanguage language) {
+        return ResponseEntity.ok(authService.registrationSmsVerification(smsVerificationDTO, language));
     }
 
     //login
