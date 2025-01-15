@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ProfileController {
+
     ProfileService profileService;
 
     @GetMapping("/{id}")
