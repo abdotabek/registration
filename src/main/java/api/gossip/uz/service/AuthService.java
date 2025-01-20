@@ -48,7 +48,7 @@ public class AuthService {
         Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(registrationDTO.getUsername());
         if (optional.isPresent()) {
             ProfileEntity profile = optional.get();
-            if (profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)) {
+            if (GeneralStatus.IN_REGISTRATION == profile.getStatus()) {
                 profileRoleService.deleteRoles(profile.getId());
                 profileRepository.delete(profile);
                 // send sms/email
@@ -67,7 +67,7 @@ public class AuthService {
         //insert Role
         profileRoleService.create(profileEntity.getId(), ProfileRole.ROLE_USER);
         if (PhoneUtil.isPhone(registrationDTO.getUsername())) {
-            smsSendService.sendRegistration(registrationDTO.getUsername());
+            smsSendService.sendRegistration(registrationDTO.getUsername(),language);
         } else if (EmailUtil.isEmail(registrationDTO.getUsername())) {
             emailSendingService.sendRegistrationEmail(registrationDTO.getUsername(), profileEntity.getId(), language);
         }
@@ -79,7 +79,7 @@ public class AuthService {
             Integer profileId = JwtUtil.decodeRegVerToken(token);
 
             ProfileEntity profile = profileService.getVerification(profileId);
-            if (profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)) {
+            if (GeneralStatus.IN_REGISTRATION == profile.getStatus()) {
                 // ACTIVE
                 profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
                 return bundleService.getMessage("email.ver.success", language);
@@ -132,7 +132,7 @@ public class AuthService {
             throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
         }
         //resend sms
-        smsSendService.sendRegistration(smsResendDTO.getPhone());
+        smsSendService.sendRegistration(smsResendDTO.getPhone(),language);
         return new AppResponse<>(bundleService.getMessage("sms.resend", language));
     }
 

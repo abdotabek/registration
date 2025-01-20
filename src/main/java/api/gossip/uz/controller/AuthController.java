@@ -29,9 +29,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.registration(registrationDTO, language));
     }
 
-    @GetMapping("/registration/email-verification/{language}/{token}")
+    @GetMapping("/registration/email-verification/{token}")
     public ResponseEntity<String> emailVerification(@PathVariable("token") String token,
-                                                    @RequestParam("language") AppLanguage language) {
+                                                    @RequestParam(value = "language" ,defaultValue = "UZ") AppLanguage language) {
         return ResponseEntity.ok(authService.registrationEmailVerification(token, language));
     }
 

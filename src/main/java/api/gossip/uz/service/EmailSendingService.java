@@ -31,7 +31,7 @@ public class EmailSendingService {
     public void sendRegistrationEmail(String email, Integer profileId, AppLanguage language) {
         /*    */
         String subject = "Complete registration";
-        String body = "Please click to link for completing to registration: %s/api/auths/registration/email-verification/%s/%s";
+        String body = "Please click to link for completing to registration: %s/api/auths/registration/email-verification/%s?lang=%s";
         body = String.format(body, serverDomain, JwtUtil.encode(profileId), language.name());
         sendEmail(email, subject, body);
     }

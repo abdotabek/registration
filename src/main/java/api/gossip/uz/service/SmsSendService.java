@@ -5,6 +5,7 @@ import api.gossip.uz.dto.sms.SmsAuthResponseDTO;
 import api.gossip.uz.dto.sms.SmsRequestDTO;
 import api.gossip.uz.dto.sms.SmsSendResponseDTO;
 import api.gossip.uz.entity.SmsProviderTokenHolderEntity;
+import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.SmsType;
 import api.gossip.uz.repository.SmsProviderTokenHolderRepository;
 import api.gossip.uz.util.RandomUtil;
@@ -30,6 +31,7 @@ public class SmsSendService {
     final RestTemplate restTemplate;
     final SmsProviderTokenHolderRepository smsProviderTokenHolderRepository;
     final SmsHistoryService smsHistoryService;
+    final ResourceBundleService bundleService;
     @Value("${eskiz.url}")
     String smsURL;
     @Value("${eskiz.login}")
@@ -52,9 +54,9 @@ public class SmsSendService {
         smsHistoryService.create(phoneNumber, message, code, smsType);
     }
 
-    public void sendRegistration(String phoneNumber) {
+    public void sendRegistration(String phoneNumber, AppLanguage language) {
         String code = RandomUtil.getRandomSmsCode();
-        String message = "This is test from Eskiz";
+        String message = bundleService.getMessage("sms.registration.config.code", language);
         message = String.format(message, code);
         sendSms(phoneNumber, message, code, SmsType.REGISTRATION);
 
