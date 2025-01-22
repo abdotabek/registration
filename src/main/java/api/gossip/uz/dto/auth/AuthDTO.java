@@ -1,4 +1,4 @@
-package api.gossip.uz.dto;
+package api.gossip.uz.dto.auth;
 
 import lombok.AccessLevel;
 import lombok.Getter;

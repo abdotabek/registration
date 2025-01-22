@@ -1,9 +1,11 @@
 package api.gossip.uz.controller;
 
 import api.gossip.uz.dto.AppResponse;
-import api.gossip.uz.dto.AuthDTO;
 import api.gossip.uz.dto.ProfileDTO;
-import api.gossip.uz.dto.RegistrationDTO;
+import api.gossip.uz.dto.auth.AuthDTO;
+import api.gossip.uz.dto.auth.RegistrationDTO;
+import api.gossip.uz.dto.auth.ResetPasswordConfirmDTO;
+import api.gossip.uz.dto.auth.ResetPasswordDTO;
 import api.gossip.uz.dto.sms.SmsResendDTO;
 import api.gossip.uz.dto.sms.SmsVerificationDTO;
 import api.gossip.uz.enums.AppLanguage;
@@ -31,7 +33,7 @@ public class AuthController {
 
     @GetMapping("/registration/email-verification/{token}")
     public ResponseEntity<String> emailVerification(@PathVariable("token") String token,
-                                                    @RequestParam(value = "language" ,defaultValue = "UZ") AppLanguage language) {
+                                                    @RequestParam(value = "language", defaultValue = "UZ") AppLanguage language) {
         return ResponseEntity.ok(authService.registrationEmailVerification(token, language));
     }
 
@@ -52,6 +54,18 @@ public class AuthController {
     public ResponseEntity<ProfileDTO> login(@RequestBody AuthDTO authDTO,
                                             @RequestHeader("Accept-Language") AppLanguage language) {
         return ResponseEntity.ok(authService.login(authDTO, language));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<AppResponse<String>> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO,
+                                                             @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        return ResponseEntity.ok(authService.resetPassword(resetPasswordDTO, language));
+    }
+
+    @PostMapping("/reset-password-confirm")
+    public ResponseEntity<AppResponse<String>> resetPasswordConfirm(@RequestBody ResetPasswordConfirmDTO resetPasswordConfirmDTO,
+                                                                    @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        return ResponseEntity.ok(authService.resetPasswordConfirm(resetPasswordConfirmDTO, language));
     }
 
 }

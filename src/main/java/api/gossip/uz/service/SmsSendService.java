@@ -62,6 +62,13 @@ public class SmsSendService {
 
     }
 
+    public void sendResetPasswordSms(String phoneNumber, AppLanguage language) {
+        String code = RandomUtil.getRandomSmsCode();
+        String message = bundleService.getMessage("sms.reset.password.confirm", language);
+        message = String.format(message, code);
+        sendSms(phoneNumber, message, code, SmsType.RESET_PASSWORD);
+    }
+
     private SmsSendResponseDTO sendSms(String phoneNumber, String message) {
         //get token
         String token = getToken();

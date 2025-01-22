@@ -1,7 +1,10 @@
 package api.gossip.uz.service;
 
+import api.gossip.uz.entity.SmsHistoryEntity;
 import api.gossip.uz.enums.AppLanguage;
+import api.gossip.uz.enums.SmsType;
 import api.gossip.uz.util.JwtUtil;
+import api.gossip.uz.util.RandomUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
@@ -27,6 +30,7 @@ public class EmailSendingService {
     String serverDomain;
 
     final JavaMailSender javaMailSender;
+    final EmailHistoryService emailHistoryService;
 
     public void sendRegistrationEmail(String email, Integer profileId, AppLanguage language) {
         /*    */
@@ -34,6 +38,27 @@ public class EmailSendingService {
         String body = "Please click to link for completing to registration: %s/api/auths/registration/email-verification/%s?lang=%s";
         body = String.format(body, serverDomain, JwtUtil.encode(profileId), language.name());
         sendEmail(email, subject, body);
+    }
+
+    public void sendResetPasswordEmail(String email, AppLanguage language) {
+        String subject = "Reset Password Confirmation";
+        String code = RandomUtil.getRandomSmsCode();
+        String body = "This is your confirm code for reset password" + code;
+        checkAndSendMineEmail(email, subject, body, code);
+    }
+
+    private void checkAndSendMineEmail(String email, String subject, String body, String code) {
+        Long emailLimit = 3L;
+        //check
+        Long count = emailHistoryService.getEmailCount(email);
+        if (count >= emailLimit) {
+            System.out.println("---- Email limit reached. Email : " + email);
+            throw new RuntimeException("Sms limit reached");
+        }
+        //send
+        sendMimeEmail(email, subject, body);
+        //create
+        emailHistoryService.create(email, code, SmsType.RESET_PASSWORD);
     }
 
     private void sendMimeEmail(String email, String subject, String body) {
@@ -44,7 +69,7 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(msg, true);
             helper.setTo(email);
             helper.setSubject(subject);
-            helper.setText(body);
+            helper.setText(body, true);
             CompletableFuture.runAsync(() -> {
                 javaMailSender.send(msg);
             });
@@ -61,4 +86,6 @@ public class EmailSendingService {
         simpleMailMessage.setText(body);
         javaMailSender.send(simpleMailMessage);
     }
+
+
 }

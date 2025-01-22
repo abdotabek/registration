@@ -29,6 +29,14 @@ Accept-Language: EN
   "password": "12345"
 }
 
+### reset password
+POST localhost:8080/api/auths/reset-password
+Content-Type: application/json
+
+{
+  "username": "abdulazizovotabek7405@gmail.com"
+}
+
 ###
 POST localhost:8080/api/auths/registration
 Content-Type: application/json
@@ -48,6 +56,7 @@ Content-Type: application/json
   "phone": "998937877405",
   "code": "This is test from Eskiz"
 }
+
 ###
 
 POST localhost:8080/api/auths/registration/sms-verification-resend

@@ -1,4 +1,4 @@
-package api.gossip.uz.dto;
+package api.gossip.uz.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;

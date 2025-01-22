@@ -8,4 +8,8 @@ public class RandomUtil {
     public static String getRandomSmsCode() {
         return String.valueOf(random.nextInt(10000, 99999));
     }
+
+    public static String generatePassword() {
+        return String.valueOf(random.nextInt(10000, 99999));
+    }
 }

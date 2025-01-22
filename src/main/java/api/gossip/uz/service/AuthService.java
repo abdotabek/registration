@@ -1,9 +1,11 @@
 package api.gossip.uz.service;
 
 import api.gossip.uz.dto.AppResponse;
-import api.gossip.uz.dto.AuthDTO;
+import api.gossip.uz.dto.auth.AuthDTO;
 import api.gossip.uz.dto.ProfileDTO;
-import api.gossip.uz.dto.RegistrationDTO;
+import api.gossip.uz.dto.auth.RegistrationDTO;
+import api.gossip.uz.dto.auth.ResetPasswordConfirmDTO;
+import api.gossip.uz.dto.auth.ResetPasswordDTO;
 import api.gossip.uz.dto.sms.SmsResendDTO;
 import api.gossip.uz.dto.sms.SmsVerificationDTO;
 import api.gossip.uz.entity.ProfileEntity;
@@ -67,7 +69,7 @@ public class AuthService {
         //insert Role
         profileRoleService.create(profileEntity.getId(), ProfileRole.ROLE_USER);
         if (PhoneUtil.isPhone(registrationDTO.getUsername())) {
-            smsSendService.sendRegistration(registrationDTO.getUsername(),language);
+            smsSendService.sendRegistration(registrationDTO.getUsername(), language);
         } else if (EmailUtil.isEmail(registrationDTO.getUsername())) {
             emailSendingService.sendRegistrationEmail(registrationDTO.getUsername(), profileEntity.getId(), language);
         }
@@ -132,8 +134,39 @@ public class AuthService {
             throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
         }
         //resend sms
-        smsSendService.sendRegistration(smsResendDTO.getPhone(),language);
+        smsSendService.sendRegistration(smsResendDTO.getPhone(), language);
         return new AppResponse<>(bundleService.getMessage("sms.resend", language));
+    }
+
+    public AppResponse<String> resetPassword(ResetPasswordDTO resetPasswordDTO, AppLanguage language) {
+        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(resetPasswordDTO.getUsername());
+        if (optional.isEmpty()) {
+            throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.not.found", language));
+        }
+        ProfileEntity profile = optional.get();
+        if (GeneralStatus.ACTIVE != profile.getStatus()) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("profile.password.wrong", language));
+        }
+        //send
+        if (PhoneUtil.isPhone(resetPasswordDTO.getUsername())) {
+            smsSendService.sendResetPasswordSms(resetPasswordDTO.getUsername(), language);
+        } else if (EmailUtil.isEmail(resetPasswordDTO.getUsername())) {
+            emailSendingService.sendResetPasswordEmail(resetPasswordDTO.getUsername(), language);
+        }
+        String responseMessage = bundleService.getMessage("reset.password.response", language);
+        return new AppResponse<>(String.format(responseMessage, resetPasswordDTO.getUsername()));
+    }
+
+    public AppResponse<String> resetPasswordConfirm(ResetPasswordConfirmDTO resetPasswordConfirmDTO, AppLanguage language) {
+        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(resetPasswordConfirmDTO.getUsername());
+        if (optional.isEmpty()) {
+            throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.not.found", language));
+        }
+        ProfileEntity profile = optional.get();
+        if (GeneralStatus.IN_REGISTRATION != profile.getStatus()) {
+            throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
+        }
+        return null;
     }
 
     public ProfileDTO getLoginInResponse(ProfileEntity profile) {
