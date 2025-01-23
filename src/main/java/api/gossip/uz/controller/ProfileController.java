@@ -1,7 +1,11 @@
 package api.gossip.uz.controller;
 
+import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.ProfileDTO;
+import api.gossip.uz.dto.dto.ProfileDetailUpdateDTO;
+import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.service.ProfileService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,5 +29,11 @@ public class ProfileController {
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         profileService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<AppResponse<String>> updateDetail(@Valid @RequestBody ProfileDetailUpdateDTO profileDetailUpdateDTO,
+                                                            @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        return ResponseEntity.ok(profileService.updateDetail(profileDetailUpdateDTO, language));
     }
 }

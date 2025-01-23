@@ -14,7 +14,7 @@ public class PostController {
     @PostMapping
     public String create(@RequestBody PostDTO postDTO) {
         System.out.println(SpringSecurityUtil.getCurrentProfile());
-        System.out.println(SpringSecurityUtil.getCurrentUserId());
+        System.out.println(SpringSecurityUtil.getCurrentProfileId());
         return "done";
     }
 
