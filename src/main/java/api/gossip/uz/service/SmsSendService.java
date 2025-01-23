@@ -127,7 +127,7 @@ public class SmsSendService {
         try {
             System.out.println("---- Sms Sender new Token was token ----");
             SmsAuthResponseDTO response = restTemplate.postForObject(smsURL + "/auth/login", smsAuthDTO, SmsAuthResponseDTO.class);
-            return response.getData().getToken();
+            return response.getMessage().getToken();
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }

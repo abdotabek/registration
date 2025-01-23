@@ -1,0 +1,17 @@
+PUT localhost:8080/api/profiles
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpZCI6IjEwNSIsImlhdCI6MTczNzYyMzI1NiwiZXhwIjoxNzM3NzA5NjU2fQ.Yia7FLeRfcJsT7uy9yAKfWgDzhpINEX8OnWe5XLWTa4snhbBzCMqkPs_QJJvJHDAdOKaXn5YMG27L2EW7cyflQ
+
+{
+  "name": "otabek"
+}
+
+###
+PUT localhost:8080/api/profiles/update-password
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpZCI6IjEwNSIsImlhdCI6MTczNzYyODE5MCwiZXhwIjoxNzM3NzE0NTkwfQ.YjSKViK-Unz9mcl5pouzK4pJz3o8wPf1hGQrbpQVOEbUPcFLwLiREzpw5Uvt9b-73i5fZKKVCOHA6dwIch2GDg
+
+{
+  "oldPassword": "66666",
+  "newPassword": "11111"
+}
