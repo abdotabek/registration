@@ -42,7 +42,8 @@ public class AuthService {
     ProfileRoleRepository profileRoleRepository;
     ResourceBundleService bundleService;
     SmsSendService smsSendService;
-    private final SmsHistoryService smsHistoryService;
+    SmsHistoryService smsHistoryService;
+    EmailHistoryService emailHistoryService;
 
     public AppResponse<String> registration(RegistrationDTO registrationDTO, AppLanguage language) {
         //1. validation
@@ -145,7 +146,7 @@ public class AuthService {
         }
         ProfileEntity profile = optional.get();
         if (GeneralStatus.ACTIVE != profile.getStatus()) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("profile.password.wrong", language));
+            throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("profile.status", language));
         }
         //send
         if (PhoneUtil.isPhone(resetPasswordDTO.getUsername())) {
@@ -153,8 +154,7 @@ public class AuthService {
         } else if (EmailUtil.isEmail(resetPasswordDTO.getUsername())) {
             emailSendingService.sendResetPasswordEmail(resetPasswordDTO.getUsername(), language);
         }
-        String responseMessage = bundleService.getMessage("reset.password.response", language);
-        return new AppResponse<>(String.format(responseMessage, resetPasswordDTO.getUsername()));
+        return new AppResponse<>(bundleService.getMessage("reset.password.response", language));
     }
 
     public AppResponse<String> resetPasswordConfirm(ResetPasswordConfirmDTO resetPasswordConfirmDTO, AppLanguage language) {
@@ -163,10 +163,18 @@ public class AuthService {
             throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.not.found", language));
         }
         ProfileEntity profile = optional.get();
-        if (GeneralStatus.IN_REGISTRATION != profile.getStatus()) {
-            throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
+        if (GeneralStatus.ACTIVE != profile.getStatus()) {
+            throw ExceptionUtil.throwConflictException(bundleService.getMessage("profile.status", language));
         }
-        return null;
+        //check
+        if (PhoneUtil.isPhone(resetPasswordConfirmDTO.getUsername())) {
+            smsHistoryService.check(resetPasswordConfirmDTO.getUsername(), resetPasswordConfirmDTO.getConfigCode(), language);
+        } else if (EmailUtil.isEmail(resetPasswordConfirmDTO.getUsername())) {
+            emailHistoryService.check(resetPasswordConfirmDTO.getUsername(), resetPasswordConfirmDTO.getConfigCode(), language);
+        }
+        profileRepository.updatePassword(profile.getId(), bCryptPasswordEncoder.encode(resetPasswordConfirmDTO.getPassword()));
+
+        return new AppResponse<>(bundleService.getMessage("reset.password.success", language));
     }
 
     public ProfileDTO getLoginInResponse(ProfileEntity profile) {

@@ -40,7 +40,7 @@ public class SmsSendService {
     String accountPassword;
 
 
-    private void sendSms(String phoneNumber, String message, String code, SmsType smsType) {
+    private SmsSendResponseDTO sendSms(String phoneNumber, String message, String code, SmsType smsType) {
         //check
         Long count = smsHistoryService.getSmsCount(phoneNumber);
         Long smsLimit = 3L;
@@ -49,9 +49,10 @@ public class SmsSendService {
             throw new RuntimeException("Sms limit reached");
         }
         //send
-        sendSms(phoneNumber, message);
+        SmsSendResponseDTO result = sendSms(phoneNumber, message);
         //save
         smsHistoryService.create(phoneNumber, message, code, smsType);
+        return result;
     }
 
     public void sendRegistration(String phoneNumber, AppLanguage language) {

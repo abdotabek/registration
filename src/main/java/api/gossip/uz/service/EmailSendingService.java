@@ -43,7 +43,7 @@ public class EmailSendingService {
     public void sendResetPasswordEmail(String email, AppLanguage language) {
         String subject = "Reset Password Confirmation";
         String code = RandomUtil.getRandomSmsCode();
-        String body = "This is your confirm code for reset password" + code;
+        String body = "This is your confirm code for reset password " + code;
         checkAndSendMineEmail(email, subject, body, code);
     }
 
