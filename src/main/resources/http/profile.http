@@ -16,10 +16,10 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0M
   "newPassword": "11111"
 }
 ###
-PUT localhost:8080/api/profiles/update-username
+PUT localhost:8080/api/profiles/username/confirm
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDU1QGdtYWlsLmNvbSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWQiOiIxMDUiLCJpYXQiOjE3Mzc3MTMyNTcsImV4cCI6MTczNzc5OTY1N30.vkNVRIrMlVcPymRm9nbOaiQOpAtH-RJ9DYvsag_yjO_8Z2nnZVahD43c8tNswI-4_i-Y3fOb0P3IcnJgNUbBTQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDU1QGdtYWlsLmNvbSIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWQiOiIxMDUiLCJpYXQiOjE3Mzc3MjE4NjgsImV4cCI6MTczNzgwODI2OH0.6xPN5UeKUJO1KsESTcOOc8g0rTMqHzRhcr-pVaDxDBUiV1nPRqowtpSig10vZQvHJH4mCCFt3VBs70TLy5uTTw
 
 {
-  "username": "998937877405"
+  "code": "13681"
 }

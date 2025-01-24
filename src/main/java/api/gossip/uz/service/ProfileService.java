@@ -7,11 +7,15 @@ import api.gossip.uz.dto.profile.ProfileDetailUpdateDTO;
 import api.gossip.uz.dto.profile.ProfilePasswordUpdate;
 import api.gossip.uz.dto.profile.ProfileUsernameUpdateDTO;
 import api.gossip.uz.entity.ProfileEntity;
+import api.gossip.uz.entity.ProfileRoleEntity;
 import api.gossip.uz.enums.AppLanguage;
+import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.ProfileRepository;
+import api.gossip.uz.repository.ProfileRoleRepository;
 import api.gossip.uz.repository.mapper.ProfileMapper;
 import api.gossip.uz.util.EmailUtil;
+import api.gossip.uz.util.JwtUtil;
 import api.gossip.uz.util.PhoneUtil;
 import api.gossip.uz.util.SpringSecurityUtil;
 import lombok.AccessLevel;
@@ -20,6 +24,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,6 +40,7 @@ public class ProfileService {
     EmailSendingService emailSendingService;
     SmsHistoryService smsHistoryService;
     EmailHistoryService emailHistoryService;
+    ProfileRoleRepository profileRoleRepository;
 
     public ProfileDTO get(Integer id) {
         return profileRepository.findById(id).map(mapper::toDTO).orElseThrow(
@@ -116,7 +122,10 @@ public class ProfileService {
         if (EmailUtil.isEmail(tempUsername)) {
             emailHistoryService.check(tempUsername, codeConfirmDTO.getCode(), language);
         }
+        profileRepository.updateUsername(profileId, codeConfirmDTO.getCode());
 
-        return null;
+        List<ProfileRole> roles = profileRoleRepository.getAllRolesListByProfileId(profile.getId());
+        String jwt = JwtUtil.encode(tempUsername, profile.getId(), roles);
+        return new AppResponse<>(jwt, bundleService.getMessage("change.username.success", language));
     }
 }
