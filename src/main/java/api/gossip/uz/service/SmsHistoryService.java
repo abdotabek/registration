@@ -51,6 +51,7 @@ public class SmsHistoryService {
             smsHistoryRepository.updateAttemptCount(entity.getId());   //update attempt count
             throw new RuntimeException(bundleService.getMessage("profile.ver.failed", language));
         }
+        //check time
         LocalDateTime expDate = entity.getCreatedDate().plusMinutes(2);
         if (LocalDateTime.now().isAfter(expDate)) {
             throw new RuntimeException(bundleService.getMessage("profile.ver.failed", language));

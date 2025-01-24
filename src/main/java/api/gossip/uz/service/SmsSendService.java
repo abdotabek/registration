@@ -70,6 +70,13 @@ public class SmsSendService {
         sendSms(phoneNumber, message, code, SmsType.RESET_PASSWORD);
     }
 
+    public void sendUsernameChangeConfirmSms(String phoneNumber, AppLanguage language) {
+        String code = RandomUtil.getRandomSmsCode();
+        String message = bundleService.getMessage("sms.change.username.confirm", language);
+        message = String.format(message, code);
+        sendSms(phoneNumber, message, code, SmsType.CHANGE_USERNAME_CONFIRM);
+    }
+
     private SmsSendResponseDTO sendSms(String phoneNumber, String message) {
         //get token
         String token = getToken();
@@ -131,6 +138,5 @@ public class SmsSendService {
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

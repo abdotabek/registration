@@ -1,9 +1,11 @@
 package api.gossip.uz.controller;
 
 import api.gossip.uz.dto.AppResponse;
+import api.gossip.uz.dto.CodeConfirmDTO;
 import api.gossip.uz.dto.ProfileDTO;
-import api.gossip.uz.dto.dto.ProfileDetailUpdateDTO;
-import api.gossip.uz.dto.dto.ProfilePasswordUpdate;
+import api.gossip.uz.dto.profile.ProfileDetailUpdateDTO;
+import api.gossip.uz.dto.profile.ProfilePasswordUpdate;
+import api.gossip.uz.dto.profile.ProfileUsernameUpdateDTO;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.service.ProfileService;
 import jakarta.validation.Valid;
@@ -43,4 +45,18 @@ public class ProfileController {
                                                               @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
         return ResponseEntity.ok(profileService.updatePassword(profilePasswordUpdate, language));
     }
+
+    @PutMapping("/update-username")
+    public ResponseEntity<AppResponse<String>> updateUsername(@Valid @RequestBody ProfileUsernameUpdateDTO profileUsernameUpdateDTO,
+                                                              @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        return ResponseEntity.ok(profileService.updateUsername(profileUsernameUpdateDTO, language));
+    }
+
+    @PutMapping("/username/confirm")
+    public ResponseEntity<AppResponse<String>> updateUsernameConfig(@Valid @RequestBody CodeConfirmDTO codeConfirmDTO,
+                                                                    @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        return ResponseEntity.ok(profileService.updateUsernameConfirm(codeConfirmDTO, language));
+    }
+
+
 }

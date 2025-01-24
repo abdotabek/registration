@@ -47,6 +47,13 @@ public class EmailSendingService {
         checkAndSendMineEmail(email, subject, body, code);
     }
 
+    public void sendUsernameChangeEmail(String email, AppLanguage language) {
+        String subject = "username change confirmation";
+        String code = RandomUtil.getRandomSmsCode();
+        String body = "this is your confirm code for changing : " + code;
+        checkAndSendMineEmail(email, subject, body, code);
+    }
+
     private void checkAndSendMineEmail(String email, String subject, String body, String code) {
         Long emailLimit = 3L;
         //check

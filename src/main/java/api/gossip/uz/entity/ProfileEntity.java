@@ -22,6 +22,9 @@ public class ProfileEntity extends BaseEntity {
     @Column(name = "username")
     String username;    //email/phone
 
+    @Column(name = "tamp_username")
+    String tempUsername;    //email/phone
+
     @Column(name = "password")
     String password;
 
