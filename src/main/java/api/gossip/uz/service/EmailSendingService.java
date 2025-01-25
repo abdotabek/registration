@@ -1,6 +1,5 @@
 package api.gossip.uz.service;
 
-import api.gossip.uz.entity.SmsHistoryEntity;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.SmsType;
 import api.gossip.uz.util.JwtUtil;

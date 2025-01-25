@@ -1,0 +1,8 @@
+POST localhost:8080/api/attaches/upload
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OTg5MTQ4Mjc3NzgiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlkIjoiMTE1IiwiaWF0IjoxNzM3ODEwMTUwLCJleHAiOjE3Mzc4OTY1NTB9.AUEbcPn6SuwbsYJi0AKaTyIa7xzY-ensLJrfRXpMV3jOX-01k08iVZG26dXe2ZbLit-5xjFfXODU9eSS7tFkIw
+
+--WebAppBoundary
+Content-Disposition: form-data; name="multipartFile"; filename="444.png"
+
+<C:\test\444.png
