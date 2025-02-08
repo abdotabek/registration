@@ -114,6 +114,19 @@
 		</dependency>
 
 
+		<!-- flyway-ning asosiy kutubxonasi-->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<!-- Ishlatilayotgan database-ga qarab tanlanadi-->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

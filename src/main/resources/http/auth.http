@@ -77,3 +77,12 @@ Accept-Language: RU
   "phone": "998937877405"
 }
 
+####
+POST localhost:8080/api/auths/login
+Content-Type: application/json
+
+{
+  "username": "admin@gmail.com",
+  "password": "123456"
+}
+

@@ -9,11 +9,8 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProfilePasswordUpdate {
+public class ProfilePhotoUpdateDTO {
 
-    @NotBlank(message = "oldPassword required")
-    String oldPassword;
-
-    @NotBlank(message = "newPassword code required")
-    String newPassword;
+    @NotBlank(message = "Photo is required")
+    String photoId;
 }

@@ -17,5 +17,6 @@ public class ProfileDTO {
     String username; //email/phone
     List<ProfileRole> roleList;
     String jwt;
+    AttachDTO photo;
 
 }

@@ -38,4 +38,10 @@ public class ProfileEntity extends BaseEntity {
     @Column(name = "created_date")
     LocalDateTime createdDate;
 
+    @Column(name = "photo_id")
+    String photoId;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "photo_id", insertable = false, updatable = false)
+    AttachEntity attachEntity;
 }

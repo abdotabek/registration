@@ -83,12 +83,12 @@ public class AttachService {
 
     public ResponseEntity<Resource> open(String id) {
         AttachEntity entity = getEntity(id);
-        Path filePath = Paths.get(getPath(entity)).normalize();
+        Path filePath = Paths.get(folderName + "/" + entity.getPath() + "/" + entity.getId()).normalize();
         Resource resource = null;
         try {
             resource = new UrlResource(filePath.toUri());
             if (!resource.exists()) {
-                throw ExceptionUtil.throwNotFoundException("file not found!");
+                throw ExceptionUtil.throwNotFoundException("file not found : " + id);
             }
             String contentType = Files.probeContentType(filePath);
             if (contentType == null) {
@@ -123,8 +123,8 @@ public class AttachService {
 
     public boolean delete(String id) {
         AttachEntity entity = getEntity(id);
-        attachRepository.delete(entity);
-        File file = new File(getPath(entity));
+        attachRepository.delete(id);
+        File file = new File(folderName + "/" + entity.getPath() + "/" + entity.getId());
         boolean result = false;
         if (file.exists()) {
             result = file.delete();
@@ -174,8 +174,16 @@ public class AttachService {
         attachDTO.setOriginName(attachEntity.getOriginName());
         attachDTO.setExtension(attachEntity.getExtension());
         attachDTO.setCreatedDate(attachEntity.getCreatedDate());
+        attachDTO.setUrl(openURL(attachEntity.getId()));
         return attachDTO;
     }
 
 
+    public AttachDTO attachDTO(String photoId) {
+        if (photoId == null) return null;
+        AttachDTO attachDTO = new AttachDTO();
+        attachDTO.setId(photoId);
+        attachDTO.setUrl(openURL(photoId));
+        return attachDTO;
+    }
 }

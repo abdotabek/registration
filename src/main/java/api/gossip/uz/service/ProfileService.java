@@ -4,10 +4,10 @@ import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.CodeConfirmDTO;
 import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.profile.ProfileDetailUpdateDTO;
-import api.gossip.uz.dto.profile.ProfilePasswordUpdate;
+import api.gossip.uz.dto.profile.ProfilePasswordUpdateDTO;
+import api.gossip.uz.dto.profile.ProfilePhotoUpdateDTO;
 import api.gossip.uz.dto.profile.ProfileUsernameUpdateDTO;
 import api.gossip.uz.entity.ProfileEntity;
-import api.gossip.uz.entity.ProfileRoleEntity;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
@@ -18,9 +18,12 @@ import api.gossip.uz.util.EmailUtil;
 import api.gossip.uz.util.JwtUtil;
 import api.gossip.uz.util.PhoneUtil;
 import api.gossip.uz.util.SpringSecurityUtil;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +44,7 @@ public class ProfileService {
     SmsHistoryService smsHistoryService;
     EmailHistoryService emailHistoryService;
     ProfileRoleRepository profileRoleRepository;
+    private final AttachService attachService;
 
     public ProfileDTO get(Integer id) {
         return profileRepository.findById(id).map(mapper::toDTO).orElseThrow(
@@ -69,7 +73,7 @@ public class ProfileService {
         return new AppResponse<>(bundleService.getMessage("profile.detail.update.success", language));
     }
 
-    public AppResponse<String> updatePassword(ProfilePasswordUpdate profilePasswordUpdate, AppLanguage language) {
+    public AppResponse<String> updatePassword(ProfilePasswordUpdateDTO profilePasswordUpdateDTO, AppLanguage language) {
 
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
         Optional<ProfileEntity> optionalProfile = profileRepository.findById(profileId);
@@ -78,11 +82,11 @@ public class ProfileService {
         }
         ProfileEntity profile = optionalProfile.get();
 
-        if (!bCryptPasswordEncoder.matches(profilePasswordUpdate.getOldPassword(), profile.getPassword())) {
+        if (!bCryptPasswordEncoder.matches(profilePasswordUpdateDTO.getOldPassword(), profile.getPassword())) {
             return new AppResponse<>(bundleService.getMessage("update.password.invalid.old", language));
         }
 
-        profileRepository.updatePassword(profileId, bCryptPasswordEncoder.encode(profilePasswordUpdate.getNewPassword()));
+        profileRepository.updatePassword(profileId, bCryptPasswordEncoder.encode(profilePasswordUpdateDTO.getNewPassword()));
 
         return new AppResponse<>(bundleService.getMessage("update.password.success", language));
     }
@@ -104,6 +108,23 @@ public class ProfileService {
         profileRepository.updateTempUsername(profileId, profileUsernameUpdateDTO.getUsername());
 
         return new AppResponse<>(bundleService.getMessage("reset.password.response", language));
+    }
+
+    public AppResponse<String> updatePhoto(String photoId, AppLanguage language) {
+        Integer profileId = SpringSecurityUtil.getCurrentProfileId();
+        /*ProfileEntity profile = new ProfileEntity();
+        profile.setPhotoId(attachId);
+        profileRepository.save(profile);*/
+
+//        ProfileEntity profile = profileRepository.findById(profileId).orElseThrow();
+        ProfileEntity profile = mapper.toEntity(get(profileId));
+        profileRepository.updatePhoto(profileId, photoId);
+
+
+        if (profile.getPhotoId() != null && !profile.getPhotoId().equals(photoId)) {
+            attachService.delete(profile.getPhotoId());
+        }
+        return new AppResponse<>(bundleService.getMessage("change.photo.success", language));
     }
 
     public AppResponse<String> updateUsernameConfirm(CodeConfirmDTO codeConfirmDTO, AppLanguage language) {
@@ -128,4 +149,5 @@ public class ProfileService {
         String jwt = JwtUtil.encode(tempUsername, profile.getId(), roles);
         return new AppResponse<>(jwt, bundleService.getMessage("change.username.success", language));
     }
+
 }

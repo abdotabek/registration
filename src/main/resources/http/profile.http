@@ -23,3 +23,11 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0M
 {
   "code": "13681"
 }
+####
+PUT localhost:8080/api/profiles/photo
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OTg5MTQ4Mjc3NzgiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlkIjoiMTE1IiwiaWF0IjoxNzM4NjU5Mjk5LCJleHAiOjE3Mzg3NDU2OTl9.odhbUp332Kf1fJ1eisqT0ePPpPct9cCGcx1U5fbN2Cn3cyacHG_2DJye-WTrmYm4yfcu1lBl0sgaH3M0UYh-RQ
+
+{
+  "photoId": "c9abd03a-3daf-4e2b-b453-7a95c17298c7.png"
+}

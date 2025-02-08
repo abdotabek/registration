@@ -44,6 +44,7 @@ public class AuthService {
     SmsSendService smsSendService;
     SmsHistoryService smsHistoryService;
     EmailHistoryService emailHistoryService;
+    private final AttachService attachService;
 
     public AppResponse<String> registration(RegistrationDTO registrationDTO, AppLanguage language) {
         //1. validation
@@ -183,6 +184,7 @@ public class AuthService {
         response.setUsername(profile.getUsername());
         response.setRoleList(profileRoleRepository.getAllRolesListByProfileId(profile.getId()));
         response.setJwt(JwtUtil.encode(profile.getUsername(), profile.getId(), response.getRoleList()));
+        response.setPhoto(attachService.attachDTO(profile.getPhotoId()));
         return response;
     }
 

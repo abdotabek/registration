@@ -4,7 +4,8 @@ import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.CodeConfirmDTO;
 import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.profile.ProfileDetailUpdateDTO;
-import api.gossip.uz.dto.profile.ProfilePasswordUpdate;
+import api.gossip.uz.dto.profile.ProfilePasswordUpdateDTO;
+import api.gossip.uz.dto.profile.ProfilePhotoUpdateDTO;
 import api.gossip.uz.dto.profile.ProfileUsernameUpdateDTO;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.service.ProfileService;
@@ -41,9 +42,15 @@ public class ProfileController {
     }
 
     @PutMapping("/update-password")
-    public ResponseEntity<AppResponse<String>> updatePassword(@Valid @RequestBody ProfilePasswordUpdate profilePasswordUpdate,
+    public ResponseEntity<AppResponse<String>> updatePassword(@Valid @RequestBody ProfilePasswordUpdateDTO profilePasswordUpdateDTO,
                                                               @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
-        return ResponseEntity.ok(profileService.updatePassword(profilePasswordUpdate, language));
+        return ResponseEntity.ok(profileService.updatePassword(profilePasswordUpdateDTO, language));
+    }
+
+    @PutMapping("/photo")
+    public ResponseEntity<AppResponse<String>> updatePhoto(@Valid @RequestBody ProfilePhotoUpdateDTO profilePhotoUpdateDTO,
+                                                           @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        return ResponseEntity.ok(profileService.updatePhoto(profilePhotoUpdateDTO.getPhotoId(), language));
     }
 
     @PutMapping("/update-username")

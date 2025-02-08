@@ -52,7 +52,7 @@ public class AuthController {
     //login
     @PostMapping("/login")
     public ResponseEntity<ProfileDTO> login(@RequestBody AuthDTO authDTO,
-                                            @RequestHeader("Accept-Language") AppLanguage language) {
+                                            @RequestHeader(value = "Accept-Language", defaultValue = "EN") AppLanguage language) {
         return ResponseEntity.ok(authService.login(authDTO, language));
     }
 
