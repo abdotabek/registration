@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Tag(name = "auth-controller", description = "controller for authentication and authorization")
+@Slf4j
 public class AuthController {
 
     AuthService authService;
@@ -32,6 +34,7 @@ public class AuthController {
     @Operation(summary = "Profile registration", description = "Api used for registration ")
     public ResponseEntity<AppResponse<String>> registration(@Valid @RequestBody RegistrationDTO registrationDTO,
                                                             @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        log.info("Registration : {} Username{}", registrationDTO.getName(), registrationDTO.getUsername());
         return ResponseEntity.ok(authService.registration(registrationDTO, language));
     }
 
@@ -61,6 +64,7 @@ public class AuthController {
     @Operation(summary = "Login user", description = "Api used login")
     public ResponseEntity<ProfileDTO> login(@RequestBody AuthDTO authDTO,
                                             @RequestHeader(value = "Accept-Language", defaultValue = "EN") AppLanguage language) {
+        log.info("Login user: {}", authDTO.getUsername());
         return ResponseEntity.ok(authService.login(authDTO, language));
     }
 
