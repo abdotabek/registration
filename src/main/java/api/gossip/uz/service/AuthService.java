@@ -23,12 +23,14 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -57,6 +59,7 @@ public class AuthService {
                 profileRepository.delete(profile);
                 // send sms/email
             } else {
+                log.warn("Profile already exist with name {}", registrationDTO.getName());
                 throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
             }
         }
@@ -89,8 +92,9 @@ public class AuthService {
                 return bundleService.getMessage("email.ver.success", language);
             }
         } catch (JwtException e) {
-            System.out.println("error");
+
         }
+        log.warn("Registration email verification failed {}", token);
         throw ExceptionUtil.throwConflictException(bundleService.getMessage("reg.failed.profile.block", language));
     }
 
@@ -104,6 +108,7 @@ public class AuthService {
             throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("profile.password.wrong", language));
         }
         if (GeneralStatus.ACTIVE != profile.getStatus()) {
+            log.info("Wrong status {}", authDTO.getUsername());
             throw ExceptionUtil.throwConflictException(bundleService.getMessage("profile.status", language));
         }
 
@@ -117,6 +122,7 @@ public class AuthService {
         }
         ProfileEntity profile = optional.get();
         if (GeneralStatus.IN_REGISTRATION != profile.getStatus()) {
+            log.info("Verification failed {}", smsVerificationDTO.getPhone());
             throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
         }
 
@@ -133,6 +139,7 @@ public class AuthService {
         }
         ProfileEntity profile = optional.get();
         if (GeneralStatus.IN_REGISTRATION != profile.getStatus()) {
+            log.info("Registration failed {}", smsResendDTO.getPhone());
             throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
         }
         //resend sms
@@ -147,6 +154,7 @@ public class AuthService {
         }
         ProfileEntity profile = optional.get();
         if (GeneralStatus.ACTIVE != profile.getStatus()) {
+            log.info("Profile status is wrong {}", resetPasswordDTO.getUsername());
             throw ExceptionUtil.throwCustomIllegalArgumentException(bundleService.getMessage("profile.status", language));
         }
         //send
@@ -165,6 +173,7 @@ public class AuthService {
         }
         ProfileEntity profile = optional.get();
         if (GeneralStatus.ACTIVE != profile.getStatus()) {
+            log.info("Profile status wrong {}", resetPasswordConfirmDTO.getUsername());
             throw ExceptionUtil.throwConflictException(bundleService.getMessage("profile.status", language));
         }
         //check

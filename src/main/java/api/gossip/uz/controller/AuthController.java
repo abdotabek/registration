@@ -42,6 +42,7 @@ public class AuthController {
     @Operation(summary = "Email verification", description = "Api used for verification")
     public ResponseEntity<String> emailVerification(@PathVariable("token") String token,
                                                     @RequestParam(value = "language", defaultValue = "UZ") AppLanguage language) {
+        log.info("Email verification: token {}", token);
         return ResponseEntity.ok(authService.registrationEmailVerification(token, language));
     }
 
@@ -49,6 +50,7 @@ public class AuthController {
     @Operation(summary = "Registration verification", description = "Api used registration")
     public ResponseEntity<ProfileDTO> smsVerification(@Valid @RequestBody SmsVerificationDTO smsVerificationDTO,
                                                       @RequestParam(value = "language", defaultValue = "UZ") AppLanguage language) {
+        log.info("Sms verification: {}", smsVerificationDTO);
         return ResponseEntity.ok(authService.registrationSmsVerification(smsVerificationDTO, language));
     }
 
@@ -56,6 +58,7 @@ public class AuthController {
     @Operation(summary = "Registration sms verification", description = "Api used sms verification")
     public ResponseEntity<AppResponse<String>> smsVerificationResend(@Valid @RequestBody SmsResendDTO smsResendDTO,
                                                                      @RequestParam(value = "language", defaultValue = "UZ") AppLanguage language) {
+        log.info("Sms verification reset: {}", smsResendDTO.getPhone());
         return ResponseEntity.ok(authService.registrationSmsVerificationResend(smsResendDTO, language));
     }
 
@@ -72,6 +75,7 @@ public class AuthController {
     @Operation(summary = "Reset password", description = "Api used reset password")
     public ResponseEntity<AppResponse<String>> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO,
                                                              @RequestHeader(value = "Accept-Language", defaultValue = "EN") AppLanguage language) {
+        log.info("Reset password: {}", resetPasswordDTO.getUsername());
         return ResponseEntity.ok(authService.resetPassword(resetPasswordDTO, language));
     }
 
@@ -79,6 +83,7 @@ public class AuthController {
     @Operation(summary = "Reset password confirm", description = "Api used reset confirm")
     public ResponseEntity<AppResponse<String>> resetPasswordConfirm(@RequestBody ResetPasswordConfirmDTO resetPasswordConfirmDTO,
                                                                     @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        log.info("Reset password confirm: {}", resetPasswordConfirmDTO.getUsername());
         return ResponseEntity.ok(authService.resetPasswordConfirm(resetPasswordConfirmDTO, language));
     }
 

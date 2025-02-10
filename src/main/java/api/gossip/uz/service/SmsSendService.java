@@ -12,6 +12,7 @@ import api.gossip.uz.util.RandomUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j
 public class SmsSendService {
 
     final RestTemplate restTemplate;
@@ -46,6 +48,7 @@ public class SmsSendService {
         Long smsLimit = 3L;
         if (count >= smsLimit) {
             System.out.println("-----------Limit reached. Phone: " + phoneNumber);
+            log.warn("Sms Limit reached. Phone: " + phoneNumber);
             throw new RuntimeException("Sms limit reached");
         }
         //send
@@ -96,6 +99,7 @@ public class SmsSendService {
                     restTemplate.exchange(smsURL + "/message/sms/send", HttpMethod.POST, httpEntity, SmsSendResponseDTO.class);
             return response.getBody();
         } catch (RuntimeException e) {
+            log.error("Send sms phone: {}, message: {}", phoneNumber, message);
             throw new RuntimeException(e);
         }
     }
@@ -136,6 +140,7 @@ public class SmsSendService {
             SmsAuthResponseDTO response = restTemplate.postForObject(smsURL + "/auth/login", smsAuthDTO, SmsAuthResponseDTO.class);
             return response.getMessage().getToken();
         } catch (RuntimeException e) {
+            log.error("Get token account: {}, error {}", accountLogin, e.getMessage());
             throw new RuntimeException(e);
         }
     }
