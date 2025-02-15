@@ -197,4 +197,8 @@ public class AuthService {
         return response;
     }
 
+    public String get() {
+        String password = "12345";
+        return bCryptPasswordEncoder.encode(password);
+    }
 }
