@@ -9,7 +9,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Builder
-public class GlobalExHandler {
+public class GlobalExceptionResponse {
     private String title;
     private Integer status;
     private String detail;

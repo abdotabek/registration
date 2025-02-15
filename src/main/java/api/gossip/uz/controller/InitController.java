@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static api.gossip.uz.enums.ProfileRole.ADMIN;
+import static api.gossip.uz.enums.ProfileRole.USER;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -40,8 +43,8 @@ public class InitController {
         profile.setStatus(GeneralStatus.ACTIVE);
         profile.setCreatedDate(LocalDateTime.now());
         profileRepository.save(profile);
-        profileRoleService.create(profile.getId(), ProfileRole.ROLE_USER);
-        profileRoleService.create(profile.getId(), ProfileRole.ROLE_ADMIN);
+        profileRoleService.create(profile.getId(),USER /*ProfileRole.ROLE_USER*/);
+        profileRoleService.create(profile.getId(), ADMIN/*ProfileRole.ROLE_ADMIN*/);
         return "DONE";
     }
 

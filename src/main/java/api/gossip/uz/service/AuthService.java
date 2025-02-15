@@ -30,6 +30,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static api.gossip.uz.enums.ProfileRole.USER;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -72,7 +74,7 @@ public class AuthService {
         profileEntity.setCreatedDate(LocalDateTime.now());
         profileRepository.save(profileEntity);     //save
         //insert Role
-        profileRoleService.create(profileEntity.getId(), ProfileRole.ROLE_USER);
+        profileRoleService.create(profileEntity.getId(), USER /*ProfileRole.ROLE_USER*/);
         if (PhoneUtil.isPhone(registrationDTO.getUsername())) {
             smsSendService.sendRegistration(registrationDTO.getUsername(), language);
         } else if (EmailUtil.isEmail(registrationDTO.getUsername())) {
