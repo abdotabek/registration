@@ -23,7 +23,7 @@ public class BaseService {
     }
 
     protected Supplier<EntityNotFound> notFound() {
-        return () -> new EntityNotFound(resourceBundleService.getMessage(""));
+        return () -> new EntityNotFound(resourceBundleService.getMessage("not.found"));
     }
 
     protected Supplier<EntityNotFound> notFound(final String entity, final Integer errorCode) {
