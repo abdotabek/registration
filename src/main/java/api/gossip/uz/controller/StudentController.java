@@ -1,7 +1,6 @@
 package api.gossip.uz.controller;
 
 import api.gossip.uz.dto.StudentDTO;
-import api.gossip.uz.exception.BadRequestException;
 import api.gossip.uz.service.ResourceBundleService;
 import api.gossip.uz.service.StudentService;
 import jakarta.validation.Valid;
@@ -41,9 +40,6 @@ public class StudentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<StudentDTO> update(@PathVariable("id") Integer id, @RequestBody StudentDTO studentDTO) {
-        if (id == null) {
-            throw new BadRequestException(bundleService.getMessage("invalid.id"));
-        }
         return ResponseEntity.ok(studentService.update(id, studentDTO));
     }
 
