@@ -1,8 +1,8 @@
 package api.gossip.uz.service;
 
 import api.gossip.uz.dto.AppResponse;
-import api.gossip.uz.dto.auth.AuthDTO;
 import api.gossip.uz.dto.ProfileDTO;
+import api.gossip.uz.dto.auth.AuthDTO;
 import api.gossip.uz.dto.auth.RegistrationDTO;
 import api.gossip.uz.dto.auth.ResetPasswordConfirmDTO;
 import api.gossip.uz.dto.auth.ResetPasswordDTO;
@@ -11,7 +11,6 @@ import api.gossip.uz.dto.sms.SmsVerificationDTO;
 import api.gossip.uz.entity.ProfileEntity;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.GeneralStatus;
-import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.ProfileRepository;
 import api.gossip.uz.repository.ProfileRoleRepository;

@@ -37,8 +37,14 @@ public enum ProfileRole {
         return ProfileRole.valueOf(value.get("code"));
     }
 
-    public static ProfileRole fromProfileRoleCode(String roleCode) {
+    /*public static ProfileRole fromProfileRoleCode(String roleCode) {
         return Arrays.stream(ProfileRole.values()).filter(profileRole -> profileRole.getRoleCode().equals(roleCode)).findAny().orElse(null);
+    }*/
+    public static ProfileRole fromProfileRoleCode(String roleCode) {
+        return Arrays.stream(ProfileRole.values())
+                .filter(profileRole -> profileRole.getRoleCode().equalsIgnoreCase(roleCode))  // Ignore case comparison
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid role code: " + roleCode));  // Optional: Handle with custom exception
     }
 
 }

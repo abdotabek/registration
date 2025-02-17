@@ -1,9 +1,10 @@
 POST localhost:8080/api/attaches/upload
 Content-Type: multipart/form-data; boundary=WebAppBoundary
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OTg5MTQ4Mjc3NzgiLCJyb2xlcyI6IlJPTEVfVVNFUiIsImlkIjoiMTE1IiwiaWF0IjoxNzM4NjU5Mjk5LCJleHAiOjE3Mzg3NDU2OTl9.odhbUp332Kf1fJ1eisqT0ePPpPct9cCGcx1U5fbN2Cn3cyacHG_2DJye-WTrmYm4yfcu1lBl0sgaH3M0UYh-RQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJVU0VSIiwiaWQiOiIxMzQiLCJpYXQiOjE3Mzk3NzI0NzEsImV4cCI6MTczOTg1ODg3MX0.KEp7Awb33-cPThwhuSCJQUmIna1fiJ3bh8NrxMS4BZ0C0Ax7Q2swcBWInxNsO5h8pFVAdBdT58GVr0_CPO7E9A
 
 --WebAppBoundary
 Content-Disposition: form-data; name="multipartFile"; filename="444.png"
 
 <C:\Users\oabdulazizov\Downloads\Telegram Desktop\Новая папка\444.png
 
+---2446137a-1964-4466-95d0-2e5878386a19.png

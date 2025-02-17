@@ -82,10 +82,18 @@ POST localhost:8080/api/auths/login
 Content-Type: application/json
 
 {
-  "username": "admin@gmail.com",
-  "password": "123456"
+  "username": "998914827778",
+  "password": "12345"
 }
 
 ###
-GET localhost:8080/api/profiles/
+POST localhost:8080/api/auths/registration
+Content-Type: application/json
+
+{
+  "name": "otabek",
+  "username": "abdulazizovotabek7405@gmail.com",
+  "password": "12345"
+}
+
 

@@ -1,25 +1,29 @@
 package api.gossip.uz.controller;
 
-import api.gossip.uz.dto.PostDTO;
-import api.gossip.uz.util.SpringSecurityUtil;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import api.gossip.uz.dto.post.PostCreatedDTO;
+import api.gossip.uz.dto.post.PostDTO;
+import api.gossip.uz.service.PostService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequestMapping("/api/posts")
-@Tag(name = "PostController", description = "Api set for working with Post")
 public class PostController {
 
+    PostService postService;
+
     @PostMapping
-    @Operation(summary = "Create post", description = "Api used created post")
-    public String create(@RequestBody PostDTO postDTO) {
-        System.out.println(SpringSecurityUtil.getCurrentProfile());
-        System.out.println(SpringSecurityUtil.getCurrentProfileId());
-        return "done";
+    public ResponseEntity<PostDTO> create(@RequestBody PostCreatedDTO postCreatedDTO) {
+        return ResponseEntity.ok(postService.create(postCreatedDTO));
     }
+
 
 }
