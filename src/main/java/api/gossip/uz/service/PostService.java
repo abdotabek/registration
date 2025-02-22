@@ -3,6 +3,7 @@ package api.gossip.uz.service;
 import api.gossip.uz.dto.post.PostCreatedDTO;
 import api.gossip.uz.dto.post.PostDTO;
 import api.gossip.uz.entity.PostEntity;
+import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.PostRepository;
 import api.gossip.uz.util.SpringSecurityUtil;
 import lombok.AccessLevel;
@@ -11,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,25 @@ public class PostService {
         entity.setProfileId(SpringSecurityUtil.getCurrentProfileId());
         postRepository.save(entity);
         return toDTO(entity);
+    }
+
+    public List<PostDTO> getProfilePostList() {
+        Integer id = SpringSecurityUtil.getCurrentProfileId();
+        List<PostEntity> postEntities = postRepository.getAllByProfileIdAndVisibleTrue(id);
+        return postEntities.stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+    public PostDTO getById(String id) {
+        return this.toDTO(postRepository.findById(id).orElseThrow(
+                () -> ExceptionUtil.throwNotFoundException("post with id does not exist")));
+    }
+
+    public void update(String id, PostCreatedDTO createdDTO) {
+        postRepository.updatePost(id, createdDTO.getTitle(),
+                createdDTO.getContent(),
+                createdDTO.getPhoto().getId());
     }
 
     private PostDTO toDTO(PostEntity postEntity) {

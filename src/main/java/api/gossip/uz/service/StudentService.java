@@ -31,13 +31,20 @@ public class StudentService extends BaseService {
         return studentRepository.findAll().stream().map(this::toDTO).toList();
     }
 
-    public StudentDTO update(Integer id, StudentDTO studentDTO) {
+    /*public StudentDTO update(Integer id, StudentDTO studentDTO) {
         StudentEntity studentEntity = studentRepository.findById(id)
                 .orElseThrow(notFound(bundleService.getMessage("student", id)));
+
         studentEntity.setName(studentDTO.getName());
         studentEntity.setSurname(studentDTO.getSurname());
         studentEntity.setAge(studentDTO.getAge());
         return this.toDTO(studentRepository.save(studentEntity));
+    }*/
+    public void update(Integer id, StudentDTO studentDTO) {
+        studentRepository.updateStudent(id,
+                studentDTO.getName(),
+                studentDTO.getSurname(),
+                studentDTO.getAge());
     }
 
     public void delete(Integer id) {
