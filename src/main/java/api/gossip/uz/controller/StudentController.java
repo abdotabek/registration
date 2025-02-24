@@ -1,7 +1,6 @@
 package api.gossip.uz.controller;
 
 import api.gossip.uz.dto.StudentDTO;
-import api.gossip.uz.service.ResourceBundleService;
 import api.gossip.uz.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import static api.gossip.uz.dto.jwt.AuthoritiesConstants.OWNER;
 public class StudentController {
 
     private final StudentService studentService;
-    private final ResourceBundleService bundleService;
 
     @Secured(OWNER)
     @PostMapping

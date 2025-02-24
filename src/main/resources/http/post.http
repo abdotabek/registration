@@ -9,3 +9,10 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0M
     "id": "2446137a-1964-4466-95d0-2e5878386a19.png"
   }
 }
+###
+POST localhost:8080/api/posts/public/filter
+Content-Type: application/json
+
+{
+  "query": "sf"
+}

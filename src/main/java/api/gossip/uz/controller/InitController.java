@@ -2,7 +2,6 @@ package api.gossip.uz.controller;
 
 import api.gossip.uz.entity.ProfileEntity;
 import api.gossip.uz.enums.GeneralStatus;
-import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.repository.ProfileRepository;
 import api.gossip.uz.service.ProfileRoleService;
 import lombok.AccessLevel;

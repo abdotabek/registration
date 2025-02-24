@@ -1,6 +1,7 @@
 package api.gossip.uz.util;
 
 import api.gossip.uz.config.CustomUserDetails;
+import api.gossip.uz.enums.ProfileRole;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,11 @@ public class SpringSecurityUtil {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails profile = (CustomUserDetails) authentication.getPrincipal();
         return profile.getId();
+    }
+
+    public static boolean hasRole(ProfileRole requiredRole) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities().stream().anyMatch(sga -> sga.getAuthority().equals(requiredRole.name()));
     }
 
     //todo
