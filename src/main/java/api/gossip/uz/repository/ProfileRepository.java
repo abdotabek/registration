@@ -3,6 +3,8 @@ package api.gossip.uz.repository;
 import api.gossip.uz.entity.ProfileEntity;
 import api.gossip.uz.enums.GeneralStatus;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -46,4 +48,9 @@ public interface ProfileRepository extends JpaRepository<ProfileEntity, Integer>
     @Transactional
     @Query("update ProfileEntity set photoId =:photoId where id =:id")
     void updatePhoto(@Param("id") Integer id, @Param("photoId") String photoId);
+
+    Page<ProfileEntity> findAllByOrderByCreatedDateDesc(PageRequest pageRequest);
+
+    @Query("from ProfileEntity where id ==:id or lower(username) like :id or lower(name) like :id")
+    Page<ProfileEntity> filter(@Param("id") Integer id, PageRequest pageRequest);
 }

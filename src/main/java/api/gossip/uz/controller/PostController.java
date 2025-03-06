@@ -3,6 +3,7 @@ package api.gossip.uz.controller;
 import api.gossip.uz.dto.post.PostCreatedDTO;
 import api.gossip.uz.dto.post.PostDTO;
 import api.gossip.uz.dto.post.PostFilterDTO;
+import api.gossip.uz.dto.post.SimilarPostListDTO;
 import api.gossip.uz.service.PostService;
 import api.gossip.uz.util.PageUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,11 +60,17 @@ public class PostController {
     }
 
     @PostMapping("/public/filter")
-    @Operation(summary = "Create post", description = "Api used from post pagination")
-    public ResponseEntity<Page<PostDTO>> create(@Valid @RequestBody PostFilterDTO filter,
+    @Operation(summary = "Create filter", description = "Api used from filer pagination")
+    public ResponseEntity<Page<PostDTO>> filter(@Valid @RequestBody PostFilterDTO filter,
                                                 @RequestParam(value = "page", defaultValue = "1") int page,
                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
         return ResponseEntity.ok(postService.filter(filter, page - 1, size));
+    }
+
+    @PostMapping("/public/similar")
+    @Operation(summary = "Get similar post list", description = "Api used for getting similar post list")
+    public ResponseEntity<List<PostDTO>> similarPostList(@Valid @RequestBody SimilarPostListDTO similarPostListDTO) {
+        return ResponseEntity.ok(postService.getSimilarPostList(similarPostListDTO));
     }
 
 }

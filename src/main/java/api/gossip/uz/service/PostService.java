@@ -1,9 +1,6 @@
 package api.gossip.uz.service;
 
-import api.gossip.uz.dto.post.FilterResultDTO;
-import api.gossip.uz.dto.post.PostCreatedDTO;
-import api.gossip.uz.dto.post.PostDTO;
-import api.gossip.uz.dto.post.PostFilterDTO;
+import api.gossip.uz.dto.post.*;
 import api.gossip.uz.entity.PostEntity;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
@@ -101,5 +98,10 @@ public class PostService {
         postDTO.setCreatedDate(postEntity.getCreatedDate());
         postDTO.setPhoto(attachService.attachDTO(postEntity.getPhotoId()));
         return postDTO;
+    }
+
+    public List<PostDTO> getSimilarPostList(SimilarPostListDTO similarPostListDTO) {
+        List<PostEntity> postList = postRepository.getSimilarPostList(similarPostListDTO.getExceptId());
+        return postList.stream().toList().stream().map(this::toDTO).toList();
     }
 }

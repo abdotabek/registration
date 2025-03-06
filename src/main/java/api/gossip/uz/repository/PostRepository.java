@@ -10,9 +10,17 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface PostRepository extends CrudRepository<PostEntity, String>, PagingAndSortingRepository<PostEntity, String> {
 
     Page<PostEntity> getAllByProfileIdAndVisibleTrue(Integer id, Pageable pageRequest);
+
+    @Query("from PostEntity where id !=?1 and visible = true order by createdDate desc limit 3")
+    List<PostEntity> getSimilarPostList(String exceptId);
+
+    @Query("from PostEntity where id !=:id and visible = true order by createdDate desc ")
+    List<PostEntity> similar(@Param("id") String id);
 
     @Modifying
     @Transactional

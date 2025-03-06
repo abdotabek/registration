@@ -8,7 +8,6 @@ import jakarta.persistence.Query;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -30,6 +29,11 @@ public class CustomRepository {
             queryBuilder.append("and lower(p.title) like :query ");
             params.put("query", "%" + filter.getQuery().toLowerCase() + "%");
         }
+        if (filter.getExceptId() != null) {
+            queryBuilder.append("and p.id != :exceptId");
+            params.put("exceptId", filter.getExceptId());
+        }
+
         StringBuilder selectBuilder = new StringBuilder("select p from Post p ").append(queryBuilder).append(" order by p.createdDate desc ");
         StringBuilder countBuilder = new StringBuilder("select count(p) from PostEntity p ").append(queryBuilder);
 

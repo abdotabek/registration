@@ -3,12 +3,10 @@ package api.gossip.uz.controller;
 import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.CodeConfirmDTO;
 import api.gossip.uz.dto.ProfileDTO;
-import api.gossip.uz.dto.profile.ProfileDetailUpdateDTO;
-import api.gossip.uz.dto.profile.ProfilePasswordUpdateDTO;
-import api.gossip.uz.dto.profile.ProfilePhotoUpdateDTO;
-import api.gossip.uz.dto.profile.ProfileUsernameUpdateDTO;
+import api.gossip.uz.dto.profile.*;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.service.ProfileService;
+import api.gossip.uz.util.PageUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -16,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -73,6 +72,17 @@ public class ProfileController {
     public ResponseEntity<AppResponse<String>> updateUsernameConfig(@Valid @RequestBody CodeConfirmDTO codeConfirmDTO,
                                                                     @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
         return ResponseEntity.ok(profileService.updateUsernameConfirm(codeConfirmDTO, language));
+    }
+
+    @PostMapping("/filter")
+    @Operation(summary = "Profile filter", description = "Api used for filtering profile list")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AppResponse<String>> filter(@RequestBody ProfileFilterDTO filterDTO,
+                                                      @RequestParam(value = "page", defaultValue = "1") int page,
+                                                      @RequestParam(value = "size", defaultValue = "10") int size,
+                                                      @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        AppResponse<String> response = profileService.filter(filterDTO, PageUtil.page(page), size, language);
+        return ResponseEntity.ok(response);
     }
 
 
