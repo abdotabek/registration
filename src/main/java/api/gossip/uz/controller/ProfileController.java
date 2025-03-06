@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -77,11 +78,11 @@ public class ProfileController {
     @PostMapping("/filter")
     @Operation(summary = "Profile filter", description = "Api used for filtering profile list")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<AppResponse<String>> filter(@RequestBody ProfileFilterDTO filterDTO,
-                                                      @RequestParam(value = "page", defaultValue = "1") int page,
-                                                      @RequestParam(value = "size", defaultValue = "10") int size,
-                                                      @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
-        AppResponse<String> response = profileService.filter(filterDTO, PageUtil.page(page), size, language);
+    public ResponseEntity<Page<ProfileDTO>> filter(@RequestBody ProfileFilterDTO filterDTO,
+                                                   @RequestParam(value = "page", defaultValue = "1") int page,
+                                                   @RequestParam(value = "size", defaultValue = "10") int size,
+                                                   @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        Page<ProfileDTO> response = profileService.filter(filterDTO, PageUtil.page(page), size, language);
         return ResponseEntity.ok(response);
     }
 

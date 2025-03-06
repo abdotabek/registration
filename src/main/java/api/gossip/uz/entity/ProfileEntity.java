@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -44,4 +45,7 @@ public class ProfileEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "photo_id", insertable = false, updatable = false)
     AttachEntity attachEntity;
+
+    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
+    List<ProfileRoleEntity> roleeList;
 }

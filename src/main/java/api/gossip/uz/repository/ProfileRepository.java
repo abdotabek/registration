@@ -8,13 +8,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface ProfileRepository extends JpaRepository<ProfileEntity, Integer> {
+public interface ProfileRepository extends JpaRepository<ProfileEntity, Integer>, PagingAndSortingRepository<ProfileEntity, Integer> {
     Optional<ProfileEntity> findByUsernameAndVisibleTrue(String username);
 
     Optional<ProfileEntity> findByIdAndVisibleTrue(Integer id);
@@ -49,8 +50,9 @@ public interface ProfileRepository extends JpaRepository<ProfileEntity, Integer>
     @Query("update ProfileEntity set photoId =:photoId where id =:id")
     void updatePhoto(@Param("id") Integer id, @Param("photoId") String photoId);
 
-    Page<ProfileEntity> findAllByOrderByCreatedDateDesc(PageRequest pageRequest);
+    @Query("from ProfileEntity as p inner join fetch p.roleeList where p.visible = true order by p.createdDate desc ")
+    Page<ProfileEntity> customFilter(PageRequest pageRequest);
 
-    @Query("from ProfileEntity where id ==:id or lower(username) like :id or lower(name) like :id")
-    Page<ProfileEntity> filter(@Param("id") Integer id, PageRequest pageRequest);
+    @Query("from ProfileEntity as p inner join fetch p.roleeList where (lower(p.username) like :username or lower(p.name) like :name) and p.visible is true ")
+    Page<ProfileEntity> filter(@Param("id") String query, PageRequest pageRequest);
 }

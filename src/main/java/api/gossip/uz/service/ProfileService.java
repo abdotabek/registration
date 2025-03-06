@@ -8,6 +8,7 @@ import api.gossip.uz.dto.profile.ProfileFilterDTO;
 import api.gossip.uz.dto.profile.ProfilePasswordUpdateDTO;
 import api.gossip.uz.dto.profile.ProfileUsernameUpdateDTO;
 import api.gossip.uz.entity.ProfileEntity;
+import api.gossip.uz.entity.ProfileRoleEntity;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
@@ -22,6 +23,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -149,22 +151,32 @@ public class ProfileService {
         return new AppResponse<>(jwt, bundleService.getMessage("change.username.success", language));
     }
 
-    public AppResponse<String> filter(ProfileFilterDTO filterDTO, int page, int size, AppLanguage language) {
+    public PageImpl<ProfileDTO> filter(ProfileFilterDTO filterDTO, int page, int size, AppLanguage language) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<ProfileEntity> profileList = null;
+        Page<ProfileEntity> filterResult = null;
         if (filterDTO.getQuery() == null) {
-            profileList = profileRepository.findAllByOrderByCreatedDateDesc(pageRequest);
+            filterResult = profileRepository.customFilter(pageRequest);
         } else {
-            profileList = profileRepository.filter(filterDTO.getQuery(), pageRequest);
+            filterResult = profileRepository.filter("%" + filterDTO.getQuery() + "%", pageRequest);
         }
+        List<ProfileDTO> resultList = filterResult.stream().map(this::toDTO).toList();
 
-        return null;
+        return new PageImpl<>(resultList, pageRequest, filterResult.getTotalElements());
     }
 
     private ProfileDTO toDTO(ProfileEntity entity) {
         ProfileDTO profileDTO = new ProfileDTO();
-        profileDTO.setUsername(entity.getUsername());
+        profileDTO.setId(entity.getId());
         profileDTO.setName(entity.getName());
+        profileDTO.setUsername(entity.getUsername());
+        if (entity.getRoleeList() != null) {
+            profileDTO.setRoleList(entity.getRoleeList()
+                    .stream()
+                    .map(ProfileRoleEntity::getRoles)
+                    .toList());
+        }
+        profileDTO.setPhoto(attachService.attachDTO(entity.getPhotoId()));
+        profileDTO.setStatus(entity.getStatus());
         return profileDTO;
     }
 }
