@@ -86,5 +86,12 @@ public class ProfileController {
         return ResponseEntity.ok(response);
     }
 
-
+    @PutMapping("/status/{id}")
+    @Operation(summary = "Change status", description = "Api used for change status from profile")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AppResponse<String>> changeStatus(@PathVariable("id") Integer id,
+                                                            @RequestBody ProfileStatusDTO statusDTO,
+                                                            @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        return ResponseEntity.ok(profileService.changeStatus(id, statusDTO.getStatus(), language));
+    }
 }

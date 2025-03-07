@@ -10,6 +10,7 @@ import api.gossip.uz.dto.profile.ProfileUsernameUpdateDTO;
 import api.gossip.uz.entity.ProfileEntity;
 import api.gossip.uz.entity.ProfileRoleEntity;
 import api.gossip.uz.enums.AppLanguage;
+import api.gossip.uz.enums.GeneralStatus;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.ProfileRepository;
@@ -164,6 +165,12 @@ public class ProfileService {
         return new PageImpl<>(resultList, pageRequest, filterResult.getTotalElements());
     }
 
+
+    public AppResponse<String> changeStatus(Integer id, GeneralStatus status, AppLanguage language) {
+        profileRepository.changeStatus(id, status);
+        return new AppResponse<>(bundleService.getMessage("update.status.success", language));
+    }
+
     private ProfileDTO toDTO(ProfileEntity entity) {
         ProfileDTO profileDTO = new ProfileDTO();
         profileDTO.setId(entity.getId());
@@ -175,8 +182,10 @@ public class ProfileService {
                     .map(ProfileRoleEntity::getRoles)
                     .toList());
         }
+        profileDTO.setCreatedDate(entity.getCreatedDate());
         profileDTO.setPhoto(attachService.attachDTO(entity.getPhotoId()));
         profileDTO.setStatus(entity.getStatus());
         return profileDTO;
     }
+
 }

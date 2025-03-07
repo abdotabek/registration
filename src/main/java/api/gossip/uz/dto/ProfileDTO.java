@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -23,5 +24,6 @@ public class ProfileDTO {
     String jwt;
     AttachDTO photo;
     GeneralStatus status;
+    LocalDateTime createdDate;
 
 }
