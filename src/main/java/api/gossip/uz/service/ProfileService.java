@@ -13,6 +13,7 @@ import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.GeneralStatus;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
+import api.gossip.uz.mapper.ProfileDetailMapper;
 import api.gossip.uz.repository.ProfileRepository;
 import api.gossip.uz.repository.ProfileRoleRepository;
 import api.gossip.uz.repository.mapper.ProfileMapper;
@@ -29,6 +30,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,16 +51,15 @@ public class ProfileService {
     private final AttachService attachService;
 
     public ProfileDTO get(Integer id) {
-        return profileRepository.findById(id).map(mapper::toDTO).orElseThrow(
-                () -> ExceptionUtil.throwNotFoundException("profile with id does not exist!"));
+        return profileRepository.findById(id)
+                .map(mapper::toDTO)
+                .orElseThrow(
+                        () -> ExceptionUtil.throwNotFoundException("profile with id does not exist!"));
     }
 
     public ProfileEntity getVerification(Integer id) {
-        return profileRepository.findByIdAndVisibleTrue(id).orElseThrow(() -> ExceptionUtil.throwNotFoundException("profile with does not exist!"));
-    }
-
-    public void delete(Integer id) {
-        profileRepository.deleteById(id);
+        return profileRepository.findByIdAndVisibleTrue(id)
+                .orElseThrow(() -> ExceptionUtil.throwNotFoundException("profile with does not exist!"));
     }
 
     public AppResponse<String> updateDetail(ProfileDetailUpdateDTO profileDetailUpdateDTO, AppLanguage language) {
@@ -154,11 +155,11 @@ public class ProfileService {
 
     public PageImpl<ProfileDTO> filter(ProfileFilterDTO filterDTO, int page, int size, AppLanguage language) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<ProfileEntity> filterResult = null;
+        Page<ProfileDetailMapper> filterResult = null;
         if (filterDTO.getQuery() == null) {
             filterResult = profileRepository.customFilter(pageRequest);
         } else {
-            filterResult = profileRepository.filter("%" + filterDTO.getQuery() + "%", pageRequest);
+//            filterResult = profileRepository.filter("%" + filterDTO.getQuery() + "%", pageRequest);
         }
         List<ProfileDTO> resultList = filterResult.stream().map(this::toDTO).toList();
 
@@ -169,6 +170,11 @@ public class ProfileService {
     public AppResponse<String> changeStatus(Integer id, GeneralStatus status, AppLanguage language) {
         profileRepository.changeStatus(id, status);
         return new AppResponse<>(bundleService.getMessage("update.status.success", language));
+    }
+
+    public AppResponse<String> delete(Integer id, AppLanguage language) {
+        profileRepository.delete(id);
+        return new AppResponse<>(bundleService.getMessage("profile.delete.success", language));
     }
 
     private ProfileDTO toDTO(ProfileEntity entity) {
@@ -185,6 +191,24 @@ public class ProfileService {
         profileDTO.setCreatedDate(entity.getCreatedDate());
         profileDTO.setPhoto(attachService.attachDTO(entity.getPhotoId()));
         profileDTO.setStatus(entity.getStatus());
+        return profileDTO;
+    }
+
+    private ProfileDTO toDTO(ProfileDetailMapper mapper) {
+        ProfileDTO profileDTO = new ProfileDTO();
+        profileDTO.setId(mapper.getId());
+        profileDTO.setName(mapper.getName());
+        profileDTO.setUsername(mapper.getUsername());
+        if (mapper.getRoles() != null) {
+            List<ProfileRole> roleList = Arrays.stream(mapper.getRoles().split(","))
+                    .map(ProfileRole::valueOf)
+                    .toList();
+            profileDTO.setRoleList(roleList);
+        }
+        profileDTO.setCreatedDate(mapper.getCratedDate());
+        profileDTO.setPhoto(attachService.attachDTO(mapper.getPhotoId()));
+        profileDTO.setStatus(mapper.getStatus());
+        profileDTO.setPostCount(mapper.getPostCount());
         return profileDTO;
     }
 

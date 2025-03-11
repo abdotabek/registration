@@ -33,13 +33,6 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.get(id));
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete profile", description = "Api used delete profile")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
-        profileService.delete(id);
-        return ResponseEntity.ok().build();
-    }
-
     @PutMapping
     @Operation(summary = "Update profile", description = "Api used update profile")
     public ResponseEntity<AppResponse<String>> updateDetail(@Valid @RequestBody ProfileDetailUpdateDTO profileDetailUpdateDTO,
@@ -93,5 +86,13 @@ public class ProfileController {
                                                             @RequestBody ProfileStatusDTO statusDTO,
                                                             @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
         return ResponseEntity.ok(profileService.changeStatus(id, statusDTO.getStatus(), language));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete profile", description = "Api used delete profile")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AppResponse<String>> delete(@PathVariable("id") Integer id,
+                                                      @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        return ResponseEntity.ok(profileService.delete(id, language));
     }
 }

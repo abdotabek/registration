@@ -54,6 +54,7 @@ public class SecurityConfig {
                     .requestMatchers(AUTH_WHITELIST).permitAll()
                     .requestMatchers("/api/attaches/**").permitAll()
                     .requestMatchers("/api/student/**").permitAll()
+                    .requestMatchers("/api/profile-roles/**").permitAll()
                     .anyRequest()
                     .authenticated();
         }).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

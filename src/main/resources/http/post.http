@@ -1,12 +1,12 @@
 POST localhost:8080/api/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJVU0VSIiwiaWQiOiIxMzQiLCJpYXQiOjE3Mzk3NzI0NzEsImV4cCI6MTczOTg1ODg3MX0.KEp7Awb33-cPThwhuSCJQUmIna1fiJ3bh8NrxMS4BZ0C0Ax7Q2swcBWInxNsO5h8pFVAdBdT58GVr0_CPO7E9A
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJVU0VSIiwiaWQiOiIxIiwiaWF0IjoxNzQxMzI0OTYyLCJleHAiOjE3NDE0MTEzNjJ9.mSv3w4UaJSASIIEAsMvQaLoHJDo2m8LEumFoumBSAAPC4Snb4rJOcno1cw3V0p66yw-I1e4hBlthQmYiXSu-7A
 
 {
   "title": "uzkassa",
   "content": "erjgberjhgbjrhebgljwrebgljwbtgjlbljrtbljrwbgljrtglkj",
   "photo": {
-    "id": "2446137a-1964-4466-95d0-2e5878386a19.png"
+    "id": "ff675bd0-87ec-4f75-aae8-c743be7468ec.png"
   }
 }
 ###
@@ -17,3 +17,5 @@ Content-Type: application/json
   "query": null,
   "exceptId": "2446137a-1964-4466-95d0-2e5878386a19.png"
 }
+###
+GET localhost:8080/api/attaches/ff675bd0-87ec-4f75-aae8-c743be7468ec.png

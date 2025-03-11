@@ -2,6 +2,7 @@ package api.gossip.uz.repository;
 
 import api.gossip.uz.entity.ProfileEntity;
 import api.gossip.uz.enums.GeneralStatus;
+import api.gossip.uz.mapper.ProfileDetailMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,9 +51,26 @@ public interface ProfileRepository extends JpaRepository<ProfileEntity, Integer>
     @Query("update ProfileEntity set photoId =:photoId where id =:id")
     void updatePhoto(@Param("id") Integer id, @Param("photoId") String photoId);
 
-    @Query("from ProfileEntity as p inner join fetch p.roleeList where p.visible = true order by p.createdDate desc ")
-    Page<ProfileEntity> customFilter(PageRequest pageRequest);
+
+    @Query(value = "select p.id as id, p.name as name, p.username as username, p.photo_id as photoId, p.status as status, p.created_date as createdDate," +
+            " (select count (*) from post as pt where pt.profile_id = p.id ) as postCount, " +
+            "(select string_agg(pr.roles, ',') from profile_role as pr where pr.profile_id = p.id) as roles " +
+            "from profile as p where p.visible = true order by p.created_date desc ", nativeQuery = true,
+            countQuery = "select count(*) from profile where visible = true ")
+    Page<ProfileDetailMapper> customFilter(PageRequest pageRequest);
+
+ /*   @Query(value = "select (select count(*) from post as pt where pt.profile_id = p.id)                          as postCount,\n" +
+            "       (select string_agg(pr.roles, ',') from profile_role as pr where pr.profile_id = p.id) as roles\n" +
+            "from profile as p\n" +
+            "where p.visible = true\n" +
+            "order by p.created_date desc", nativeQuery = true, countQuery = "select count(*) from profile where visible = true")
+    Page<Object[]> customFilter(PageRequest pageRequest);*/
 
     @Query("from ProfileEntity as p inner join fetch p.roleeList where (lower(p.username) like :username or lower(p.name) like :name) and p.visible is true ")
     Page<ProfileEntity> filter(@Param("id") String query, PageRequest pageRequest);
+
+    @Modifying
+    @Transactional
+    @Query("update ProfileEntity set visible = false where id= :id")
+    void delete(@Param("id") Integer id);
 }

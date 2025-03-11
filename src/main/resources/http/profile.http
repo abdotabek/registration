@@ -15,6 +15,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0M
   "oldPassword": "66666",
   "newPassword": "11111"
 }
+
 ###
 PUT localhost:8080/api/profiles/username/confirm
 Content-Type: application/json
@@ -23,6 +24,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0M
 {
   "code": "13681"
 }
+
 ####
 PUT localhost:8080/api/profiles/photo
 Content-Type: application/json
@@ -31,3 +33,29 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OTg5MTQ4Mjc3NzgiLCJyb2xlc
 {
   "photoId": "c9abd03a-3daf-4e2b-b453-7a95c17298c7.png"
 }
+
+###
+POST localhost:8080/api/auths/registration
+Content-Type: application/json
+
+{
+  "name": "Otabek",
+  "password": "12345",
+  "username": "abdulazizovotabek7405@gmail.com"
+}
+
+###
+DELETE localhost:8080/api/profiles/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJBRE1JTiIsImlkIjoiMSIsImlhdCI6MTc0MTMyNzAwOCwiZXhwIjoxNzQxNDEzNDA4fQ.Fh5CFQZGSSEwPHR8wSRLOvg9sLYXNVRlKN4VT5UutZ7P9M6YCU2WtpzqrP6QXkVagwkfT4HFAV1ccbPl_0ZTuA
+
+###
+POST localhost:8080/api/profiles/filter?page=1&size=10
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJBRE1JTixVU0VSIiwiaWQiOiIxIiwiaWF0IjoxNzQxNjY1MjgwLCJleHAiOjE3NDE3NTE2ODB9._2OIPS2RXQB9Y0Mkv58yBBUBML1JRTsJmOsyQoe22zwACHZvM7AXkbGIWHJYOrXE3aErnlisKPJxItmfexQ4_w
+
+{
+  "query": null
+}
+
+

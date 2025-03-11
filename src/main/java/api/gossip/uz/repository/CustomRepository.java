@@ -34,7 +34,7 @@ public class CustomRepository {
             params.put("exceptId", filter.getExceptId());
         }
 
-        StringBuilder selectBuilder = new StringBuilder("select p from Post p ").append(queryBuilder).append(" order by p.createdDate desc ");
+        StringBuilder selectBuilder = new StringBuilder("select p from PostEntity p ").append(queryBuilder).append(" order by p.createdDate desc ");
         StringBuilder countBuilder = new StringBuilder("select count(p) from PostEntity p ").append(queryBuilder);
 
         Query selectQuery = entityManager.createQuery(selectBuilder.toString());
@@ -46,8 +46,6 @@ public class CustomRepository {
         Query countQuery = entityManager.createQuery(countBuilder.toString());
         params.forEach(countQuery::setParameter);
         Long totalCount = (Long) countQuery.getSingleResult();
-
-
         return new FilterResultDTO<>(entityList, totalCount);
     }
 }

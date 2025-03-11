@@ -25,5 +25,6 @@ public class ProfileDTO {
     AttachDTO photo;
     GeneralStatus status;
     LocalDateTime createdDate;
+    Long postCount;
 
 }
