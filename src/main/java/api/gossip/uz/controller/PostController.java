@@ -4,6 +4,7 @@ import api.gossip.uz.dto.post.PostCreatedDTO;
 import api.gossip.uz.dto.post.PostDTO;
 import api.gossip.uz.dto.post.PostFilterDTO;
 import api.gossip.uz.dto.post.SimilarPostListDTO;
+import api.gossip.uz.dto.profile.PostAdminFilterDTO;
 import api.gossip.uz.service.PostService;
 import api.gossip.uz.util.PageUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -71,6 +73,15 @@ public class PostController {
     @Operation(summary = "Get similar post list", description = "Api used for getting similar post list")
     public ResponseEntity<List<PostDTO>> similarPostList(@Valid @RequestBody SimilarPostListDTO similarPostListDTO) {
         return ResponseEntity.ok(postService.getSimilarPostList(similarPostListDTO));
+    }
+
+    @PostMapping("/filter")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Post filter for admin", description = "Api used for filter post list")
+    public ResponseEntity<Page<PostDTO>> fil(@RequestBody PostAdminFilterDTO filterDTO,
+                                             @RequestParam(value = "page", defaultValue = "1") int page,
+                                             @RequestParam(value = "size", defaultValue = "10") int size) {
+        return ResponseEntity.ok(postService.adminFilter(filterDTO, page, size));
     }
 
 }

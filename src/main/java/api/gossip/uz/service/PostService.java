@@ -1,10 +1,11 @@
 package api.gossip.uz.service;
 
 import api.gossip.uz.dto.post.*;
+import api.gossip.uz.dto.profile.PostAdminFilterDTO;
 import api.gossip.uz.entity.PostEntity;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
-import api.gossip.uz.repository.CustomRepository;
+import api.gossip.uz.repository.CustomPostRepository;
 import api.gossip.uz.repository.PostRepository;
 import api.gossip.uz.util.SpringSecurityUtil;
 import lombok.AccessLevel;
@@ -25,7 +26,7 @@ public class PostService {
 
     PostRepository postRepository;
     AttachService attachService;
-    CustomRepository customRepository;
+    CustomPostRepository customPostRepository;
 
     public PostDTO create(PostCreatedDTO createdDTO) {
         PostEntity entity = new PostEntity();
@@ -84,7 +85,15 @@ public class PostService {
 
     public PageImpl<PostDTO> filter(PostFilterDTO filterDTO, int page, int size) {
         FilterResultDTO<PostEntity> resultDTO =
-                customRepository.filter(filterDTO, page, size);
+                customPostRepository.filter(filterDTO, page, size);
+        List<PostDTO> dtoList = resultDTO.getList().stream()
+                .map(this::toDTO).toList();
+        return new PageImpl<>(dtoList, PageRequest.of(page, size), resultDTO.getTotalCount());
+    }
+
+    public Page<PostDTO> adminFilter(PostAdminFilterDTO filterDTO, int page, int size) {
+        FilterResultDTO<PostEntity> resultDTO =
+                customPostRepository.filter(filterDTO, page, size);
         List<PostDTO> dtoList = resultDTO.getList().stream()
                 .map(this::toDTO).toList();
         return new PageImpl<>(dtoList, PageRequest.of(page, size), resultDTO.getTotalCount());
@@ -104,4 +113,5 @@ public class PostService {
         List<PostEntity> postList = postRepository.getSimilarPostList(similarPostListDTO.getExceptId());
         return postList.stream().toList().stream().map(this::toDTO).toList();
     }
+
 }

@@ -159,7 +159,7 @@ public class ProfileService {
         if (filterDTO.getQuery() == null) {
             filterResult = profileRepository.customFilter(pageRequest);
         } else {
-//            filterResult = profileRepository.filter("%" + filterDTO.getQuery() + "%", pageRequest);
+            filterResult = profileRepository.filter("%" + filterDTO.getQuery() + "%", pageRequest);
         }
         List<ProfileDTO> resultList = filterResult.stream().map(this::toDTO).toList();
 
