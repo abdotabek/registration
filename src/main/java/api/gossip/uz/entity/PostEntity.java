@@ -1,5 +1,6 @@
 package api.gossip.uz.entity;
 
+import api.gossip.uz.enums.GeneralStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -45,5 +46,8 @@ public class PostEntity {
     @Column(name = "visible")
     Boolean visible = true;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    GeneralStatus status;
 
 }

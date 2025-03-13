@@ -1,6 +1,7 @@
 package api.gossip.uz.dto.post;
 
 import api.gossip.uz.dto.AttachCreateDTO;
+import api.gossip.uz.enums.GeneralStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -20,4 +21,5 @@ public class PostCreatedDTO {
     String content;
     @NotNull(message = "Photo required")
     AttachCreateDTO photo;
+    GeneralStatus status;
 }

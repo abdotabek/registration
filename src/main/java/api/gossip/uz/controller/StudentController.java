@@ -15,7 +15,7 @@ import static api.gossip.uz.dto.jwt.AuthoritiesConstants.OWNER;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/student")
+@RequestMapping("/api/v1/student")
 public class StudentController {
 
     private final StudentService studentService;

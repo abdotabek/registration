@@ -1,9 +1,9 @@
-POST localhost:8080/api/posts
+POST localhost:8080/api/v1/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJVU0VSIiwiaWQiOiIxIiwiaWF0IjoxNzQxMzI0OTYyLCJleHAiOjE3NDE0MTEzNjJ9.mSv3w4UaJSASIIEAsMvQaLoHJDo2m8LEumFoumBSAAPC4Snb4rJOcno1cw3V0p66yw-I1e4hBlthQmYiXSu-7A
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJBRE1JTixVU0VSIiwiaWQiOiIxIiwiaWF0IjoxNzQxODQxMzc0LCJleHAiOjE3NDE5Mjc3NzR9.KtOVNI25To1froPFeTGym1_7co-C4i8cEPxcnIGWmXyShzKFZkWXGtLqmFWOB8LDvBiNTmpCtsrIR1Lgb2p6Ew
 
 {
-  "title": "uzkassa",
+  "title": "korzinka",
   "content": "erjgberjhgbjrhebgljwrebgljwbtgjlbljrtbljrwbgljrtglkj",
   "photo": {
     "id": "ff675bd0-87ec-4f75-aae8-c743be7468ec.png"
@@ -15,7 +15,7 @@ Content-Type: application/json
 
 {
   "query": null,
-  "exceptId": "2446137a-1964-4466-95d0-2e5878386a19.png"
+  "exceptId": "2446137a-1964-4466-95d0-2e5878386a19.png "
 }
 ###
 GET localhost:8080/api/attaches/ff675bd0-87ec-4f75-aae8-c743be7468ec.png
@@ -23,8 +23,17 @@ GET localhost:8080/api/attaches/ff675bd0-87ec-4f75-aae8-c743be7468ec.png
 ###
 POST localhost:8080/api/posts/filter
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJBRE1JTixVU0VSIiwiaWQiOiIxIiwiaWF0IjoxNzQxNjY1MjgwLCJleHAiOjE3NDE3NTE2ODB9._2OIPS2RXQB9Y0Mkv58yBBUBML1JRTsJmOsyQoe22zwACHZvM7AXkbGIWHJYOrXE3aErnlisKPJxItmfexQ4_w
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJBRE1JTixVU0VSIiwiaWQiOiIxIiwiaWF0IjoxNzQxNzU0ODk4LCJleHAiOjE3NDE4NDEyOTh9.2gpelY-7ECMiSHy4GSJ583gTOiTYOWpGWjMObopb7oAMw1H-zzTuzvRpYJvBs4TPccOW6sFEnf622JblqmpztA
 
 {
+}
+
+###
+PUT localhost:8080/api/v1/posts/status/bac0a1f9-ee26-4fb5-a0fa-4ebd55c7d20a
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJBRE1JTiIsImlkIjoiMSIsImlhdCI6MTc0MTg0MTk2MywiZXhwIjoxNzQxOTI4MzYzfQ.D8vJVEsCE9rnx_egysx5ud0CJvGzqYqAXapz7g6fYwHv14TiDpx62Fj28yPAiXrvrb8z7bhBMWOFSn6y3p87Vw
+
+{
+  "status": "ACTIVE"
 
 }

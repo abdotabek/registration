@@ -28,7 +28,7 @@ public class SecurityConfig {
     UserDetailsService userDetailsService;
     JwtAuthenticationFilter jwtAuthenticationFilter;
     public static final String[] AUTH_WHITELIST = {
-            "/api/auths/**",
+            "/api/v1/auths/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
@@ -36,7 +36,7 @@ public class SecurityConfig {
             "/webjars/**",
             "/swagger-resources/**",
             "/api/all",
-            "/api/posts/public/*"
+            "/api/v1/posts/public/*"
     };
 
     @Bean
@@ -52,9 +52,9 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
             authorizationManagerRequestMatcherRegistry
                     .requestMatchers(AUTH_WHITELIST).permitAll()
-                    .requestMatchers("/api/attaches/**").permitAll()
-                    .requestMatchers("/api/student/**").permitAll()
-                    .requestMatchers("/api/profile-roles/**").permitAll()
+                    .requestMatchers("/api/v1/attaches/**").permitAll()
+                    .requestMatchers("/api/v1/student/**").permitAll()
+                    .requestMatchers("/api/v1/profile-roles/**").permitAll()
                     .anyRequest()
                     .authenticated();
         }).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

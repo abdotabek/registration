@@ -23,7 +23,7 @@ public class CustomPostRepository {
     EntityManager entityManager;
 
     public FilterResultDTO<PostEntity> filter(PostFilterDTO filter, int page, int size) {
-        StringBuilder queryBuilder = new StringBuilder(" where visible = true ");
+        StringBuilder queryBuilder = new StringBuilder(" where visible = true and status = 'ACTIVE' ");
         Map<String, Object> params = new HashMap<>();
 
         if (filter.getQuery() != null) {
@@ -50,17 +50,18 @@ public class CustomPostRepository {
         return new FilterResultDTO<>(entityList, totalCount);
     }
 
-    public FilterResultDTO<PostEntity> filter(PostAdminFilterDTO filter, int page, int size) {
+    public FilterResultDTO<Object[]> filter(PostAdminFilterDTO filter, int page, int size) {
         StringBuilder queryBuilder = new StringBuilder(" where p.visible = true ");
         Map<String, Object> params = new HashMap<>();
 
-        if (filter.getProfileQuery() != null) {
-            queryBuilder.append("and lower(pr.name) like :profileQuery or lower(pr.username) like :profileQuery");
-            params.put("profileQuery", "%" + filter.getProfileQuery().toLowerCase() + "%");
+        if (filter.getProfileQuery() != null && !filter.getProfileQuery().isBlank()) {
+            queryBuilder.append(" and (lower(pr.name) like :profileQuery or lower(pr.username) like :profileQuery)");
+            params.put(" profileQuery", "%" + filter.getProfileQuery().toLowerCase() + "%");
         }
-        if (filter.getPostQuery() != null) {
-            queryBuilder.append("and lower(p.title) like :postQuery or p.id = :postQuery");
-            params.put("postQuery", "%" + filter.getPostQuery().toLowerCase() + "%");
+        if (filter.getPostQuery() != null && !filter.getPostQuery().isBlank()) {
+            queryBuilder.append(" and (lower(p.title) like :postQuery or p.id = :postId)");
+            params.put(" postQuery", "%" + filter.getPostQuery().toLowerCase() + "%");
+            params.put(" postId", filter.getPostQuery().toLowerCase());
         }
         // full column from PostEntity
         /*StringBuilder selectBuilder = new StringBuilder(" from PostEntity p ")
@@ -68,8 +69,8 @@ public class CustomPostRepository {
                 .append(queryBuilder)*/
         // Mapped column from PostEntity
         StringBuilder selectBuilder = new StringBuilder("select p.id as postId, p.title as postTitle, p.photoId as postPhotoId, p.createdDate as postCreatedDate," +
-                " pr.id as profileId, pr.name as profileName, pr.username as profileUsername" +
-                " From PostEntity p ")
+                " pr.id as profileId, pr.name as profileName, pr.username as profileUsername ")
+                .append(" from PostEntity p ")
                 .append(" inner join p.profile as pr ")
                 .append(queryBuilder)
                 .append(" order by p.createdDate desc ");
@@ -80,7 +81,7 @@ public class CustomPostRepository {
         selectQuery.setFirstResult((page) * size);
         selectQuery.setMaxResults(size);
         params.forEach(selectQuery::setParameter);
-        List<PostEntity> entityList = selectQuery.getResultList();
+        List<Object[]> entityList = selectQuery.getResultList();
 
         Query countQuery = entityManager.createQuery(countBuilder.toString());
         params.forEach(countQuery::setParameter);

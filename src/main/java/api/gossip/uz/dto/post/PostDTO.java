@@ -1,6 +1,7 @@
 package api.gossip.uz.dto.post;
 
 import api.gossip.uz.dto.AttachDTO;
+import api.gossip.uz.dto.ProfileDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,4 +21,5 @@ public class PostDTO {
     String content;
     AttachDTO photo;
     LocalDateTime createdDate;
+    ProfileDTO profileDTO;
 }

@@ -1,8 +1,11 @@
 package api.gossip.uz.service;
 
+import api.gossip.uz.dto.AppResponse;
+import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.post.*;
 import api.gossip.uz.dto.profile.PostAdminFilterDTO;
 import api.gossip.uz.entity.PostEntity;
+import api.gossip.uz.enums.GeneralStatus;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.CustomPostRepository;
@@ -27,6 +30,7 @@ public class PostService {
     PostRepository postRepository;
     AttachService attachService;
     CustomPostRepository customPostRepository;
+    ResourceBundleService bundleService;
 
     public PostDTO create(PostCreatedDTO createdDTO) {
         PostEntity entity = new PostEntity();
@@ -36,6 +40,7 @@ public class PostService {
         entity.setVisible(true);
         entity.setCreatedDate(LocalDateTime.now());
         entity.setProfileId(SpringSecurityUtil.getCurrentProfileId());
+        entity.setStatus(GeneralStatus.NOT_ACTIVE);
         postRepository.save(entity);
         return toDTO(entity);
     }
@@ -74,13 +79,26 @@ public class PostService {
         }
     }
 
-    public void deleteById(String id) {
+    public void changeStatus(String id, PostCreatedDTO createdDTO) {
+        PostEntity postEntity = postRepository.findById(id).orElseThrow(
+                () -> ExceptionUtil.throwNotFoundException("post with id does not exist"));
+        if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN)) {
+            throw new RuntimeException("you do not have permission to update this post");
+        }
+        if (GeneralStatus.NOT_ACTIVE == postEntity.getStatus()) {
+            postEntity.setStatus(createdDTO.getStatus());
+        }
+        postRepository.save(postEntity);
+    }
+
+    public AppResponse<String> deleteById(String id) {
         PostEntity entity = postRepository.findById(id).orElseThrow();
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
         if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN) && !entity.getProfileId().equals(profileId)) {
             throw new RuntimeException("you do not have permission to delete this post");
         }
         postRepository.delete(id);
+        return new AppResponse<>(bundleService.getMessage("post.delete.success"));
     }
 
     public PageImpl<PostDTO> filter(PostFilterDTO filterDTO, int page, int size) {
@@ -92,7 +110,7 @@ public class PostService {
     }
 
     public Page<PostDTO> adminFilter(PostAdminFilterDTO filterDTO, int page, int size) {
-        FilterResultDTO<PostEntity> resultDTO =
+        FilterResultDTO<Object[]> resultDTO =
                 customPostRepository.filter(filterDTO, page, size);
         List<PostDTO> dtoList = resultDTO.getList().stream()
                 .map(this::toDTO).toList();
@@ -106,6 +124,23 @@ public class PostService {
         postDTO.setContent(postDTO.getContent());
         postDTO.setCreatedDate(postEntity.getCreatedDate());
         postDTO.setPhoto(attachService.attachDTO(postEntity.getPhotoId()));
+        return postDTO;
+    }
+
+    private PostDTO toDTO(Object[] obj) {
+        PostDTO postDTO = new PostDTO();
+        postDTO.setId((String) obj[0]);
+        postDTO.setTitle((String) obj[1]);
+        if (obj[2] != null) {
+            postDTO.setPhoto(attachService.attachDTO((String) obj[2]));
+        }
+        postDTO.setCreatedDate((LocalDateTime) obj[3]);
+
+        ProfileDTO profileDTO = new ProfileDTO();
+        profileDTO.setId((Integer) obj[4]);
+        profileDTO.setName((String) obj[5]);
+        profileDTO.setUsername((String) obj[6]);
+        postDTO.setProfileDTO(profileDTO);
         return postDTO;
     }
 

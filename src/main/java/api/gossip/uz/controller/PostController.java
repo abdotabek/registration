@@ -1,5 +1,6 @@
 package api.gossip.uz.controller;
 
+import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.post.PostCreatedDTO;
 import api.gossip.uz.dto.post.PostDTO;
 import api.gossip.uz.dto.post.PostFilterDTO;
@@ -23,7 +24,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequestMapping("/api/posts")
+@RequestMapping("/api/v1/posts")
 public class PostController {
 
     PostService postService;
@@ -54,9 +55,16 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/status/{id}")
+    @Operation(summary = "Put post change status", description = "Api used from update status")
+    public ResponseEntity<Void> changeStatus(@PathVariable String id, @RequestBody PostCreatedDTO createdDTO) {
+        postService.changeStatus(id, createdDTO);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete post by id", description = "Api used from post deleted")
-    public ResponseEntity<Void> delete(@Valid @PathVariable String id) {
+    public ResponseEntity<AppResponse<String>> delete(@Valid @PathVariable String id) {
         postService.deleteById(id);
         return ResponseEntity.ok().build();
     }
@@ -66,7 +74,7 @@ public class PostController {
     public ResponseEntity<Page<PostDTO>> filter(@Valid @RequestBody PostFilterDTO filter,
                                                 @RequestParam(value = "page", defaultValue = "1") int page,
                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
-        return ResponseEntity.ok(postService.filter(filter, page - 1, size));
+        return ResponseEntity.ok(postService.filter(filter, PageUtil.page(page), size));
     }
 
     @PostMapping("/public/similar")
@@ -81,7 +89,7 @@ public class PostController {
     public ResponseEntity<Page<PostDTO>> fil(@RequestBody PostAdminFilterDTO filterDTO,
                                              @RequestParam(value = "page", defaultValue = "1") int page,
                                              @RequestParam(value = "size", defaultValue = "10") int size) {
-        return ResponseEntity.ok(postService.adminFilter(filterDTO, page, size));
+        return ResponseEntity.ok(postService.adminFilter(filterDTO, PageUtil.page(page), size));
     }
 
 }
