@@ -8,11 +8,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/profile-roles")
 @RequiredArgsConstructor
@@ -25,14 +28,15 @@ public class ProfileRoleController {
 
     @PostMapping("/{id}")
     @Operation(summary = "Create profile role", description = "Api used cred profile role")
-    public ResponseEntity<Void> create(@PathVariable("id") Integer id, @RequestBody ProfileRole profileRole) {
-        profileRoleService.create(id, profileRole);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ProfileRoleDTO> create(@PathVariable("id") Integer id, @RequestBody ProfileRole profileRole) {
+        log.info("Create role : {}profileRole", profileRole);
+        return ResponseEntity.status(HttpStatus.CREATED).body(profileRoleService.create(id, profileRole));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get profile_role by id", description = "Api used get profile_role by id")
     public ResponseEntity<ProfileRoleDTO> get(@PathVariable("id") Integer id) {
+        log.info("Get profile : {}profile", id);
         return ResponseEntity.ok(profileRoleService.get(id));
     }
 
@@ -45,6 +49,7 @@ public class ProfileRoleController {
     @PutMapping("/{id}")
     @Operation(summary = "Update profile_role", description = "Api used update profile_role bu id")
     public ResponseEntity<ProfileRoleDTO> update(@PathVariable("id") Integer id, @RequestBody ProfileRoleDTO profileRoleDTO) {
+        log.info("Update profile : {}profileId, {}roles, {}createdDate", profileRoleDTO.getProfileId(), profileRoleDTO.getRoles(), profileRoleDTO.getCreatedDate());
         return ResponseEntity.ok(profileRoleService.update(id, profileRoleDTO));
     }
 

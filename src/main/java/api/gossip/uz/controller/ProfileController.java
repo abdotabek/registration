@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Tag(name = "ProfileController", description = "Api set with working Profile")
+@Slf4j
 public class ProfileController {
 
     ProfileService profileService;
@@ -30,6 +32,7 @@ public class ProfileController {
     @GetMapping("/{id}")
     @Operation(summary = "Get profile", description = "Api used get profile")
     public ResponseEntity<ProfileDTO> get(@PathVariable("id") Integer id) {
+
         return ResponseEntity.ok(profileService.get(id));
     }
 
@@ -37,6 +40,7 @@ public class ProfileController {
     @Operation(summary = "Update profile", description = "Api used update profile")
     public ResponseEntity<AppResponse<String>> updateDetail(@Valid @RequestBody ProfileDetailUpdateDTO profileDetailUpdateDTO,
                                                             @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        log.info("Update profile : {}name", profileDetailUpdateDTO.getName());
         return ResponseEntity.ok(profileService.updateDetail(profileDetailUpdateDTO, language));
     }
 
@@ -51,6 +55,7 @@ public class ProfileController {
     @Operation(summary = "Update photo", description = "Api used update photo")
     public ResponseEntity<AppResponse<String>> updatePhoto(@Valid @RequestBody ProfilePhotoUpdateDTO profilePhotoUpdateDTO,
                                                            @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        log.info("Update photo : {}photoId", profilePhotoUpdateDTO.getPhotoId());
         return ResponseEntity.ok(profileService.updatePhoto(profilePhotoUpdateDTO.getPhotoId(), language));
     }
 
@@ -58,6 +63,7 @@ public class ProfileController {
     @Operation(summary = "Update username", description = "Api used username")
     public ResponseEntity<AppResponse<String>> updateUsername(@Valid @RequestBody ProfileUsernameUpdateDTO profileUsernameUpdateDTO,
                                                               @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        log.info("Update username : {}username", profileUsernameUpdateDTO.getUsername());
         return ResponseEntity.ok(profileService.updateUsername(profileUsernameUpdateDTO, language));
     }
 
@@ -76,6 +82,7 @@ public class ProfileController {
                                                    @RequestParam(value = "size", defaultValue = "10") int size,
                                                    @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
         Page<ProfileDTO> response = profileService.filter(filterDTO, PageUtil.page(page), size, language);
+        log.info("Profile filter : {}query", filterDTO.getQuery());
         return ResponseEntity.ok(response);
     }
 
@@ -85,6 +92,7 @@ public class ProfileController {
     public ResponseEntity<AppResponse<String>> changeStatus(@PathVariable("id") Integer id,
                                                             @RequestBody ProfileStatusDTO statusDTO,
                                                             @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
+        log.info("Change status : {}status", statusDTO.getStatus());
         return ResponseEntity.ok(profileService.changeStatus(id, statusDTO.getStatus(), language));
     }
 

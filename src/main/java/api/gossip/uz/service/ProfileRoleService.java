@@ -22,12 +22,12 @@ public class ProfileRoleService {
     ProfileRoleRepository profileRoleRepository;
     ProfileRoleMapper mapper;
 
-    public void create(Integer profileId, ProfileRole profileRole) {
+    public ProfileRoleDTO create(Integer profileId, ProfileRole profileRole) {
         ProfileRoleEntity profileRoleEntity = new ProfileRoleEntity();
         profileRoleEntity.setProfileId(profileId);
         profileRoleEntity.setRoles(profileRole);
         profileRoleEntity.setCreatedDate(LocalDateTime.now());
-        profileRoleRepository.save(profileRoleEntity);
+        return toDTO(profileRoleRepository.save(profileRoleEntity));
     }
 
     public ProfileRoleDTO get(Integer id) {
