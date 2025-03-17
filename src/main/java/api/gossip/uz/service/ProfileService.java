@@ -54,12 +54,12 @@ public class ProfileService {
         return profileRepository.findById(id)
                 .map(mapper::toDTO)
                 .orElseThrow(
-                        () -> ExceptionUtil.throwNotFoundException("profile with id does not exist!"));
+                        () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.with.id.does.not.exist")));
     }
 
     public ProfileEntity getVerification(Integer id) {
         return profileRepository.findByIdAndVisibleTrue(id)
-                .orElseThrow(() -> ExceptionUtil.throwNotFoundException("profile with does not exist!"));
+                .orElseThrow(() -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.with.id.does.not.exist")));
     }
 
     public AppResponse<String> updateDetail(ProfileDetailUpdateDTO profileDetailUpdateDTO, AppLanguage language) {

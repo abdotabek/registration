@@ -22,6 +22,7 @@ import java.util.concurrent.CompletableFuture;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmailSendingService {
 
+    final ResourceBundleService bundleService;
     @Value("${spring.mail.username}")
     String fromAccount;
 
@@ -59,7 +60,7 @@ public class EmailSendingService {
         Long count = emailHistoryService.getEmailCount(email);
         if (count >= emailLimit) {
             System.out.println("---- Email limit reached. Email : " + email);
-            throw new RuntimeException("Sms limit reached");
+            throw new RuntimeException(bundleService.getMessage("sms.limit.reached"));
         }
         //send
         sendMimeEmail(email, subject, body);

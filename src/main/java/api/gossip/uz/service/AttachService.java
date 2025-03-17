@@ -38,6 +38,7 @@ import java.util.UUID;
 public class AttachService {
 
     final AttachRepository attachRepository;
+    final ResourceBundleService resourceBundleService;
 
     @Value("${attach.upload.folder}")
     String folderName;
@@ -48,7 +49,7 @@ public class AttachService {
 
     public AttachDTO upload(MultipartFile multipartFile) {
         if (multipartFile.isEmpty()) {
-            throw ExceptionUtil.throwNotFoundException("file not found");
+            throw ExceptionUtil.throwNotFoundException(resourceBundleService.getMessage("file.not.found"));
         }
         try {
             String pathFolder = getYmDString(); // 2024/09/27
@@ -88,7 +89,7 @@ public class AttachService {
         try {
             resource = new UrlResource(filePath.toUri());
             if (!resource.exists()) {
-                throw ExceptionUtil.throwNotFoundException("file not found : " + id);
+                throw ExceptionUtil.throwNotFoundException(resourceBundleService.getMessage("file.not.found" + id));
             }
             String contentType = Files.probeContentType(filePath);
             if (contentType == null) {
@@ -113,11 +114,11 @@ public class AttachService {
                 return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; fileName=\"" + attachEntity.getOriginName() + "\"").body(resource);
             } else {
-                throw new RuntimeException("could not read the file!");
+                throw new RuntimeException(resourceBundleService.getMessage("could.not.read"));
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            throw new RuntimeException("could not read the dile");
+            throw new RuntimeException(resourceBundleService.getMessage("could.not.read"));
         }
     }
 
@@ -154,7 +155,7 @@ public class AttachService {
         Optional<AttachEntity> optional = attachRepository.findById(id);
         if (optional.isEmpty()) {
             System.out.println("Attach error : file not found");
-            throw ExceptionUtil.throwNotFoundException("attach not found");
+            throw ExceptionUtil.throwNotFoundException("file.not.found");
         }
         return optional.get();
     }

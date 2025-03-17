@@ -13,7 +13,6 @@ import java.util.List;
 public class StudentService extends BaseService {
 
     private final StudentRepository studentRepository;
-    private final ResourceBundleService bundleService;
 
     public StudentDTO create(StudentDTO studentDTO) {
         StudentEntity studentEntity = new StudentEntity();
@@ -24,7 +23,7 @@ public class StudentService extends BaseService {
     }
 
     public StudentDTO get(Integer id) {
-        return toDTO(studentRepository.findById(id).orElseThrow(notFound(bundleService.getMessage("student", id))));
+        return toDTO(studentRepository.findById(id).orElseThrow(notFound(resourceBundleService.getMessage("student", id))));
     }
 
     public List<StudentDTO> getAll() {

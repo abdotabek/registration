@@ -21,6 +21,7 @@ public class ProfileRoleService {
 
     ProfileRoleRepository profileRoleRepository;
     ProfileRoleMapper mapper;
+    ResourceBundleService bundleService;
 
     public ProfileRoleDTO create(Integer profileId, ProfileRole profileRole) {
         ProfileRoleEntity profileRoleEntity = new ProfileRoleEntity();
@@ -32,7 +33,7 @@ public class ProfileRoleService {
 
     public ProfileRoleDTO get(Integer id) {
         return profileRoleRepository.findById(id).map(mapper::toDTO).orElseThrow(()
-                -> ExceptionUtil.throwNotFoundException("profileRole with id does not exist!"));
+                -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.role.with.id.does.not.exist")));
     }
 
     public List<ProfileRoleDTO> getList() {
@@ -47,7 +48,7 @@ public class ProfileRoleService {
                     profileRole.setCreatedDate(LocalDateTime.now());
                     profileRoleRepository.save(profileRole);
                     return profileRole.getId();
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("profileRole with id does not exist!"));
+                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.role.with.id.does.not.exist")));
         return profileRoleDTO;
     }
 

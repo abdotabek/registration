@@ -58,7 +58,7 @@ public class PostService {
 
     public PostDTO getById(String id) {
         return this.toDTO(postRepository.findById(id).orElseThrow(
-                () -> ExceptionUtil.throwNotFoundException("post with id does not exist")));
+                () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("post.with.id.does.not.exist"))));
     }
 
     public void update(String id, PostCreatedDTO createdDTO) {
@@ -66,7 +66,7 @@ public class PostService {
         String deletePhotoId = null;
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
         if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN) && !postEntity.getProfileId().equals(profileId)) {
-            throw new RuntimeException("you do not have permission to update this post");
+            throw new RuntimeException(bundleService.getMessage("not.have.permission"));
         }
         if (!createdDTO.getPhoto().getId().equals(postEntity.getId())) {
             deletePhotoId = postEntity.getPhotoId();
@@ -81,9 +81,9 @@ public class PostService {
 
     public void changeStatus(String id, PostCreatedDTO createdDTO) {
         PostEntity postEntity = postRepository.findById(id).orElseThrow(
-                () -> ExceptionUtil.throwNotFoundException("post with id does not exist"));
+                () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("post.with.id.does.not.exist")));
         if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN)) {
-            throw new RuntimeException("you do not have permission to update this post");
+            throw new RuntimeException(bundleService.getMessage("not.have.permission"));
         }
         if (GeneralStatus.NOT_ACTIVE == postEntity.getStatus()) {
             postEntity.setStatus(createdDTO.getStatus());
@@ -95,7 +95,7 @@ public class PostService {
         PostEntity entity = postRepository.findById(id).orElseThrow();
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
         if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN) && !entity.getProfileId().equals(profileId)) {
-            throw new RuntimeException("you do not have permission to delete this post");
+            throw new RuntimeException(bundleService.getMessage("not.have.permission"));
         }
         postRepository.delete(id);
         return new AppResponse<>(bundleService.getMessage("post.delete.success"));
