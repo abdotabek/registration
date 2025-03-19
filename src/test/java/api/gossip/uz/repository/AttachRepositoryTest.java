@@ -22,12 +22,6 @@ class AttachRepositoryTest {
 
     @BeforeEach
     void setup() {
-        testEntityManager.flush();
-        testEntityManager.clear();
-    }
-
-    @Test
-    void delete() {
         AttachEntity attachEntity = new AttachEntity();
         attachEntity.setId("123");
         attachEntity.setOriginName("test");
@@ -39,14 +33,19 @@ class AttachRepositoryTest {
 
         attachRepository.delete("123");
 
-        Optional<AttachEntity> beforeDelete = attachRepository.findById("123");
+        testEntityManager.flush();
+        testEntityManager.clear();
+    }
 
+    @Test
+    void delete() {
+        Optional<AttachEntity> beforeDelete = attachRepository.findById("123");
         assertTrue(beforeDelete.isPresent());
         assertEquals("123", beforeDelete.get().getId());
         assertEquals("test", beforeDelete.get().getPath());
         assertEquals("test", beforeDelete.get().getExtension());
         assertEquals("test", beforeDelete.get().getOriginName());
-        assertEquals(true, beforeDelete.get().getVisible());
+        assertEquals(false, beforeDelete.get().getVisible());
         assertEquals(10, beforeDelete.get().getSize());
 
     }
