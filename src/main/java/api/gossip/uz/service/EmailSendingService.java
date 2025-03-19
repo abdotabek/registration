@@ -78,9 +78,7 @@ public class EmailSendingService {
             helper.setTo(email);
             helper.setSubject(subject);
             helper.setText(body, true);
-            CompletableFuture.runAsync(() -> {
-                javaMailSender.send(msg);
-            });
+            CompletableFuture.runAsync(() -> javaMailSender.send(msg));
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }

@@ -57,5 +57,9 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0M
 {
   "query": "a"
 }
+###
+GET localhost:8080/api/v1/profile-roles
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1bGF6aXpvdm90YWJlazc0MDVAZ21haWwuY29tIiwicm9sZXMiOiJBRE1JTiIsImlkIjoiMSIsImlhdCI6MTc0MjM3MDI3OCwiZXhwIjoxNzQyNDU2Njc4fQ.c45rphSY6a_ruezOpHbX-lb2bQIVibtC15aCPBf1JfzKhuaazzLmNrai3SAR0LG7TtUHTTe2335z4lX2saTHpg
 
 
