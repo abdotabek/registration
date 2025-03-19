@@ -22,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmailSendingService {
 
-    final ResourceBundleService bundleService;
+
     @Value("${spring.mail.username}")
     String fromAccount;
 
@@ -31,6 +31,7 @@ public class EmailSendingService {
 
     final JavaMailSender javaMailSender;
     final EmailHistoryService emailHistoryService;
+    final ResourceBundleService bundleService;
 
     public void sendRegistrationEmail(String email, Integer profileId, AppLanguage language) {
         /*    */

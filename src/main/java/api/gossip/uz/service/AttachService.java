@@ -38,7 +38,7 @@ import java.util.UUID;
 public class AttachService {
 
     final AttachRepository attachRepository;
-    final ResourceBundleService resourceBundleService;
+    final ResourceBundleService bundleService;
 
     @Value("${attach.upload.folder}")
     String folderName;
@@ -49,7 +49,7 @@ public class AttachService {
 
     public AttachDTO upload(MultipartFile multipartFile) {
         if (multipartFile.isEmpty()) {
-            throw ExceptionUtil.throwNotFoundException(resourceBundleService.getMessage("file.not.found"));
+            throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("file.not.found"));
         }
         try {
             String pathFolder = getYmDString(); // 2024/09/27
@@ -89,7 +89,7 @@ public class AttachService {
         try {
             resource = new UrlResource(filePath.toUri());
             if (!resource.exists()) {
-                throw ExceptionUtil.throwNotFoundException(resourceBundleService.getMessage("file.not.found" + id));
+                throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("file.not.found" + id));
             }
             String contentType = Files.probeContentType(filePath);
             if (contentType == null) {
@@ -114,11 +114,11 @@ public class AttachService {
                 return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; fileName=\"" + attachEntity.getOriginName() + "\"").body(resource);
             } else {
-                throw new RuntimeException(resourceBundleService.getMessage("could.not.read"));
+                throw new RuntimeException(bundleService.getMessage("could.not.read"));
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            throw new RuntimeException(resourceBundleService.getMessage("could.not.read"));
+            throw new RuntimeException(bundleService.getMessage("could.not.read"));
         }
     }
 

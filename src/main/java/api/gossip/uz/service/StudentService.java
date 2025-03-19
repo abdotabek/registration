@@ -23,7 +23,7 @@ public class StudentService extends BaseService {
     }
 
     public StudentDTO get(Integer id) {
-        return toDTO(studentRepository.findById(id).orElseThrow(notFound(resourceBundleService.getMessage("student", id))));
+        return toDTO(studentRepository.findById(id).orElseThrow(notFound(bundleService.getMessage("student", id))));
     }
 
     public List<StudentDTO> getAll() {

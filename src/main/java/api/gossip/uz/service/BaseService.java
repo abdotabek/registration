@@ -16,30 +16,30 @@ public class BaseService {
 
     @Lazy
     @Autowired
-    protected ResourceBundleService resourceBundleService;
+    protected ResourceBundleService bundleService;
 
     protected Supplier<EntityNotFound> notFound(final String entity) {
-        return () -> new EntityNotFound(resourceBundleService.getMessage("not.found", entity));
+        return () -> new EntityNotFound(bundleService.getMessage("not.found", entity));
     }
 
     protected Supplier<EntityNotFound> notFound() {
-        return () -> new EntityNotFound(resourceBundleService.getMessage("not.found"));
+        return () -> new EntityNotFound(bundleService.getMessage("not.found"));
     }
 
     protected Supplier<EntityNotFound> notFound(final String entity, final Integer errorCode) {
-        return () -> new EntityNotFound(resourceBundleService.getMessage("not.found", entity), errorCode);
+        return () -> new EntityNotFound(bundleService.getMessage("not.found", entity), errorCode);
     }
 
     protected Supplier<EntityNotFound> notFound(final String entity, final Long id) {
-        return () -> new EntityNotFound((resourceBundleService.getMessage("not.found", entity, id)));
+        return () -> new EntityNotFound((bundleService.getMessage("not.found", entity, id)));
     }
 
     protected Supplier<EntityNotFound> notFound(final String entity, final String id) {
-        return () -> new EntityNotFound(resourceBundleService.getMessage("not.found", entity, id));
+        return () -> new EntityNotFound(bundleService.getMessage("not.found", entity, id));
     }
 
     protected Supplier<EntityNotFound> notFound(final String entity, final String id, final Integer errorCode) {
-        return () -> new EntityNotFound(resourceBundleService.getMessage("not.found", entity, id), errorCode);
+        return () -> new EntityNotFound(bundleService.getMessage("not.found", entity, id), errorCode);
     }
 
     protected Supplier<BadRequestException> badRequest(String message) {
