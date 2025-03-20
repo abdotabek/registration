@@ -19,9 +19,6 @@ public interface PostRepository extends CrudRepository<PostEntity, String>, Pagi
     @Query("from PostEntity where id !=?1 and visible = true and status = 'ACTIVE' order by createdDate desc limit 3")
     List<PostEntity> getSimilarPostList(String exceptId);
 
-    @Query("from PostEntity where id !=:id and visible = true order by createdDate desc ")
-    List<PostEntity> similar(@Param("id") String id);
-
     @Modifying
     @Transactional
     @Query("update PostEntity set title =:title, content =:content, photoId =:photoId where id =:id")
