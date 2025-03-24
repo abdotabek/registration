@@ -16,9 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AttachRepositoryTest {
 
     @Autowired
-    AttachRepository attachRepository;
+    private AttachRepository attachRepository;
     @Autowired
-    TestEntityManager testEntityManager;
+    private TestEntityManager testEntityManager;
 
     @BeforeEach
     void setup() {

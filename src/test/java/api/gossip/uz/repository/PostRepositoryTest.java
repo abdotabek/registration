@@ -22,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DataJpaTest
 class PostRepositoryTest {
     @Autowired
-    PostRepository postRepository;
+    private PostRepository postRepository;
     @Autowired
-    TestEntityManager testEntityManager;
+    private TestEntityManager testEntityManager;
     private String POST_ID;
     private Integer PROFILE_ID;
     private String ATTACH_ID;

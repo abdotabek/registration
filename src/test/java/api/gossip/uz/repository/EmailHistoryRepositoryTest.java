@@ -18,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class EmailHistoryRepositoryTest {
 
     @Autowired
-    EmailHistoryRepository emailHistoryRepository;
+    private EmailHistoryRepository emailHistoryRepository;
     @Autowired
-    TestEntityManager testEntityManager;
+    private TestEntityManager testEntityManager;
     private Integer EMAIL_HISTORY_ID;
 
     @BeforeEach
@@ -33,7 +33,6 @@ class EmailHistoryRepositoryTest {
 
         testEntityManager.persistAndFlush(emailHistoryEntity);
         EMAIL_HISTORY_ID = emailHistoryEntity.getId();
-        testEntityManager.clear();
     }
 
     @AfterEach
@@ -53,11 +52,13 @@ class EmailHistoryRepositoryTest {
 
     @Test
     void findTop1ByEmailOrderByCreatedDateDesc() {
+        testEntityManager.flush();
+        testEntityManager.clear();
         Optional<EmailHistoryEntity> result = emailHistoryRepository.findTop1ByEmailOrderByCreatedDateDesc("test@gmail.com");
         assertTrue(result.isPresent());
         assertEquals("test@gmail.com", result.get().getEmail());
         assertEquals("test", result.get().getCode());
-        assertEquals(1, result.get().getId());
+        assertEquals(EMAIL_HISTORY_ID, result.get().getId());
     }
 
     @Test

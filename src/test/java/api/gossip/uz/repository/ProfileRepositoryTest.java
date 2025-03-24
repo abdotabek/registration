@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class ProfileRepositoryTest {
     @Autowired
-    ProfileRepository profileRepository;
+    private ProfileRepository profileRepository;
     @Autowired
-    TestEntityManager testEntityManager;
+    private TestEntityManager testEntityManager;
 
     private final String PHOTO_ID = "789";
     private Integer PROFILE_ID;
