@@ -47,7 +47,7 @@ public class AuthService {
     SmsSendService smsSendService;
     SmsHistoryService smsHistoryService;
     EmailHistoryService emailHistoryService;
-    private final AttachService attachService;
+    AttachService attachService;
 
     public AppResponse<String> registration(RegistrationDTO registrationDTO, AppLanguage language) {
         //1. validation
@@ -117,7 +117,7 @@ public class AuthService {
     }
 
     public ProfileDTO registrationSmsVerification(SmsVerificationDTO smsVerificationDTO, AppLanguage language) {
-        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(smsVerificationDTO.getPhone());
+            Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(smsVerificationDTO.getPhone());
         if (optional.isEmpty()) {
             throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.not.found", language));
         }
@@ -126,9 +126,7 @@ public class AuthService {
             log.info("Verification failed {}", smsVerificationDTO.getPhone());
             throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
         }
-
         smsHistoryService.check(smsVerificationDTO.getPhone(), smsVerificationDTO.getCode(), language);
-
         profileRepository.changeStatus(profile.getId(), GeneralStatus.ACTIVE);
         return getLoginInResponse(profile);
     }
@@ -138,7 +136,7 @@ public class AuthService {
         if (optional.isEmpty()) {
             throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.not.found", language));
         }
-        ProfileEntity profile = optional.get();
+            ProfileEntity profile = optional.get();
         if (GeneralStatus.IN_REGISTRATION != profile.getStatus()) {
             log.info("Registration failed {}", smsResendDTO.getPhone());
             throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));
@@ -190,6 +188,7 @@ public class AuthService {
 
     public ProfileDTO getLoginInResponse(ProfileEntity profile) {
         ProfileDTO response = new ProfileDTO();
+        response.setId(profile.getId());
         response.setName(profile.getName());
         response.setUsername(profile.getUsername());
         response.setRoleList(profileRoleRepository.getAllRolesListByProfileId(profile.getId()));

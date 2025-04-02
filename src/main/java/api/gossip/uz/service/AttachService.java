@@ -6,6 +6,7 @@ import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.AttachRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -39,10 +40,10 @@ public class AttachService {
 
     final AttachRepository attachRepository;
     final ResourceBundleService bundleService;
-
+    @Setter
     @Value("${attach.upload.folder}")
     String folderName;
-
+    @Setter
     @Value("${attach.upload.url}")
     String attachUrl;
 
@@ -139,7 +140,7 @@ public class AttachService {
         return new PageImpl<>(entityPage.stream().map(this::toDTO).toList(), pageable, entityPage.getTotalElements());
     }
 
-    private String getYmDString() {
+    protected String getYmDString() {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
         int day = Calendar.getInstance().get(Calendar.DATE);
