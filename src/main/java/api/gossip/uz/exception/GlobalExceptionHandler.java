@@ -25,6 +25,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(ex.getErrorDTO(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(BadRequestException1.class)
+    public ResponseEntity<ErrorDTO> handlerBadRequestException(BadRequestException ex) {
+        return new ResponseEntity<>(ex.getErrorDTO(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handlerConflictException(RuntimeException ex) {
         ex.printStackTrace();

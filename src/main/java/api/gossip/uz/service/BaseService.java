@@ -1,6 +1,6 @@
 package api.gossip.uz.service;
 
-import api.gossip.uz.exception.BadRequestException;
+import api.gossip.uz.exception.BadRequestException1;
 import api.gossip.uz.exception.EntityNotFound;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +42,11 @@ public class BaseService {
         return () -> new EntityNotFound(bundleService.getMessage("not.found", entity, id), errorCode);
     }
 
-    protected Supplier<BadRequestException> badRequest(String message) {
-        return () -> new BadRequestException(message);
+    protected Supplier<BadRequestException1> badRequest(String message) {
+        return () -> new BadRequestException1(message);
     }
 
-    protected Supplier<BadRequestException> badRequest(String message, int errorCode) {
-        return () -> new BadRequestException(message, errorCode);
+    protected Supplier<BadRequestException1> badRequest(String message, int errorCode) {
+        return () -> new BadRequestException1(message, errorCode);
     }
 }

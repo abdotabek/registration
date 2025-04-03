@@ -35,4 +35,14 @@ public class ExceptionUtil {
                 .build();
         throw new ConflictException(errorDTO, message);
     }
+
+    public static BadRequestException throwBadRequestException(String message) {
+        ErrorDTO errorDTO = ErrorDTO.builder()
+                .title("BadRequest Error")
+                .message(message)
+                .status(HttpStatus.BAD_REQUEST)
+                .localDateTime(LocalDateTime.now())
+                .build();
+        throw new BadRequestException(errorDTO, message);
+    }
 }

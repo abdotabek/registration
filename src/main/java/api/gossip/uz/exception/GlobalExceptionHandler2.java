@@ -53,8 +53,8 @@ public class GlobalExceptionHandler2 {
         return globalExceptionResponseResponseEntity(problem, ex, request);
     }
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<GlobalExceptionResponse> handleBadRequest(BadRequestException ex, HttpServletRequest request) {
+    @ExceptionHandler(BadRequestException1.class)
+    public ResponseEntity<GlobalExceptionResponse> handleBadRequest(BadRequestException1 ex, HttpServletRequest request) {
         GlobalExceptionResponse problem = GlobalExceptionResponse.builder()
                 .status(400)
                 .title(ex.getMessage())

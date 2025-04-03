@@ -1,31 +1,19 @@
 package api.gossip.uz.exception;
 
+import api.gossip.uz.dto.ErrorDTO;
+import lombok.AccessLevel;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
-@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Bad request")
+@Setter
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class BadRequestException extends RuntimeException {
-    private int errorCode = -1;
-    private String solution;
+    ErrorDTO errorDTO;
 
-    public BadRequestException() {
-        this("Произошла ошибка");
-    }
-
-    public BadRequestException(String message, int errorCode, String solution) {
-        this(message);
-        this.errorCode = errorCode;
-        this.solution = solution;
-    }
-
-    public BadRequestException(String message, int errorCode) {
-        this(message);
-        this.errorCode = errorCode;
-    }
-
-    public BadRequestException(String message) {
+    public BadRequestException(ErrorDTO error, String message) {
         super(message);
+        this.errorDTO = error;
     }
 }

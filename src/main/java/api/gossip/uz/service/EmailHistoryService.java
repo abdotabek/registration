@@ -3,6 +3,7 @@ package api.gossip.uz.service;
 import api.gossip.uz.entity.EmailHistoryEntity;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.SmsType;
+import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.EmailHistoryRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -38,20 +39,20 @@ public class EmailHistoryService {
     public void check(String email, String code, AppLanguage language) {
         Optional<EmailHistoryEntity> optional = emailHistoryRepository.findTop1ByEmailOrderByCreatedDateDesc(email);
         if (optional.isEmpty()) {
-            throw new RuntimeException(bundleService.getMessage("profile.ver.failed", language));
+            throw ExceptionUtil.throwBadRequestException((bundleService.getMessage("profile.ver.failed", language)));
         }
         EmailHistoryEntity entity = optional.get();
-        if (entity.getAttemptCount() >= 3){
-            throw new RuntimeException(bundleService.getMessage("attempt.count", language));
+        if (entity.getAttemptCount() >= 3) {
+            throw ExceptionUtil.throwBadRequestException(bundleService.getMessage("attempt.count", language));
         }
         //check codes
         if (!entity.getCode().equals(code)) {
             emailHistoryRepository.updateAttemptCount(entity.getId());   //update attempt count
-            throw new RuntimeException(bundleService.getMessage("profile.ver.failed", language));
+            throw ExceptionUtil.throwBadRequestException(bundleService.getMessage("profile.ver.failed", language));
         }
         LocalDateTime expDate = entity.getCreatedDate().plusMinutes(2);
         if (LocalDateTime.now().isAfter(expDate)) {
-            throw new RuntimeException(bundleService.getMessage("profile.ver.failed", language));
+            throw ExceptionUtil.throwBadRequestException(bundleService.getMessage("profile.ver.failed", language));
         }
     }
 }
