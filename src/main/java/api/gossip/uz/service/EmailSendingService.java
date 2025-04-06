@@ -2,6 +2,7 @@ package api.gossip.uz.service;
 
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.SmsType;
+import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.util.JwtUtil;
 import api.gossip.uz.util.RandomUtil;
 import jakarta.mail.MessagingException;
@@ -55,13 +56,13 @@ public class EmailSendingService {
         checkAndSendMineEmail(email, subject, body, code);
     }
 
-    private void checkAndSendMineEmail(String email, String subject, String body, String code) {
+    protected void checkAndSendMineEmail(String email, String subject, String body, String code) {
         Long emailLimit = 3L;
         //check
         Long count = emailHistoryService.getEmailCount(email);
         if (count >= emailLimit) {
             System.out.println("---- Email limit reached. Email : " + email);
-            throw new RuntimeException(bundleService.getMessage("sms.limit.reached"));
+            throw ExceptionUtil.throwBadRequestException(bundleService.getMessage("sms.limit.reached"));
         }
         //send
         sendMimeEmail(email, subject, body);
@@ -69,7 +70,7 @@ public class EmailSendingService {
         emailHistoryService.create(email, code, SmsType.RESET_PASSWORD);
     }
 
-    private void sendMimeEmail(String email, String subject, String body) {
+    protected void sendMimeEmail(String email, String subject, String body) {
         try {
             MimeMessage msg = javaMailSender.createMimeMessage();
             msg.setFrom(fromAccount);
@@ -84,7 +85,7 @@ public class EmailSendingService {
         }
     }
 
-    private void sendEmail(String mail, String subject, String body) {
+    protected void sendEmail(String mail, String subject, String body) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(fromAccount);
         simpleMailMessage.setTo(mail);
