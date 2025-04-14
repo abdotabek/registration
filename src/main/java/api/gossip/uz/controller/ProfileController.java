@@ -32,7 +32,6 @@ public class ProfileController {
     @GetMapping("/{id}")
     @Operation(summary = "Get profile", description = "Api used get profile")
     public ResponseEntity<ProfileDTO> get(@PathVariable("id") Integer id) {
-
         return ResponseEntity.ok(profileService.get(id));
     }
 

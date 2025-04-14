@@ -169,7 +169,7 @@ public class AttachService {
         return attachUrl + "/open/" + fileName;
     }
 
-    private AttachDTO toDTO(AttachEntity attachEntity) {
+    protected AttachDTO toDTO(AttachEntity attachEntity) {
         AttachDTO attachDTO = new AttachDTO();
         attachDTO.setId(attachEntity.getId());
         attachDTO.setSize(attachEntity.getSize());
@@ -181,7 +181,7 @@ public class AttachService {
     }
 
 
-    public AttachDTO attachDTO(String photoId) {
+    protected AttachDTO attachDTO(String photoId) {
         if (photoId == null) return null;
         AttachDTO attachDTO = new AttachDTO();
         attachDTO.setId(photoId);

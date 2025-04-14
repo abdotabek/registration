@@ -1,6 +1,5 @@
 package api.gossip.uz.service;
 
-import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.ProfileDTO;
 import api.gossip.uz.dto.post.*;
 import api.gossip.uz.dto.profile.PostAdminFilterDTO;
@@ -62,9 +61,11 @@ public class PostService {
     }
 
     public void update(String id, PostCreatedDTO createdDTO) {
-        PostEntity postEntity = new PostEntity();
+        PostEntity postEntity = postRepository.findById(id).orElseThrow(
+                () -> ExceptionUtil.throwNotFoundException(""));
         String deletePhotoId = null;
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
+
         if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN) && !postEntity.getProfileId().equals(profileId)) {
             throw new RuntimeException(bundleService.getMessage("not.have.permission"));
         }
@@ -91,14 +92,15 @@ public class PostService {
         postRepository.save(postEntity);
     }
 
-    public AppResponse<String> deleteById(String id) {
-        PostEntity entity = postRepository.findById(id).orElseThrow();
+    public void deleteById(String id) {
+        PostEntity entity = postRepository.findById(id).orElseThrow(
+                () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("not.found")));
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
         if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN) && !entity.getProfileId().equals(profileId)) {
             throw new RuntimeException(bundleService.getMessage("not.have.permission"));
         }
         postRepository.delete(id);
-        return new AppResponse<>(bundleService.getMessage("post.delete.success"));
+        bundleService.getMessage("post.delete.success");
     }
 
     public PageImpl<PostDTO> filter(PostFilterDTO filterDTO, int page, int size) {
@@ -117,11 +119,16 @@ public class PostService {
         return new PageImpl<>(dtoList, PageRequest.of(page, size), resultDTO.getTotalCount());
     }
 
-    private PostDTO toDTO(PostEntity postEntity) {
+    public List<PostDTO> getSimilarPostList(SimilarPostListDTO similarPostListDTO) {
+        List<PostEntity> postList = postRepository.getSimilarPostList(similarPostListDTO.getExceptId());
+        return postList.stream().toList().stream().map(this::toDTO).toList();
+    }
+
+    protected PostDTO toDTO(PostEntity postEntity) {
         PostDTO postDTO = new PostDTO();
         postDTO.setId(postEntity.getId());
         postDTO.setTitle(postEntity.getTitle());
-        postDTO.setContent(postDTO.getContent());
+        postDTO.setContent(postEntity.getContent());
         postDTO.setCreatedDate(postEntity.getCreatedDate());
         postDTO.setPhoto(attachService.attachDTO(postEntity.getPhotoId()));
         return postDTO;
@@ -142,11 +149,6 @@ public class PostService {
         profileDTO.setUsername((String) obj[6]);
         postDTO.setProfileDTO(profileDTO);
         return postDTO;
-    }
-
-    public List<PostDTO> getSimilarPostList(SimilarPostListDTO similarPostListDTO) {
-        List<PostEntity> postList = postRepository.getSimilarPostList(similarPostListDTO.getExceptId());
-        return postList.stream().toList().stream().map(this::toDTO).toList();
     }
 
 }

@@ -143,6 +143,7 @@ public class ProfileService {
         if (PhoneUtil.isPhone(tempUsername)) {
             smsHistoryService.check(tempUsername, codeConfirmDTO.getCode(), language);
         }
+        System.exit(ProfileRole.ADMIN.getPriority());
         if (EmailUtil.isEmail(tempUsername)) {
             emailHistoryService.check(tempUsername, codeConfirmDTO.getCode(), language);
         }
