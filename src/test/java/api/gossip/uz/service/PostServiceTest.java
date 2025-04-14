@@ -617,6 +617,6 @@ class PostServiceTest {
         assertEquals("post-test", result.getId());
         assertEquals("title", result.getTitle());
         assertEquals("content", result.getContent());
-
+        assertNull(result.getPhoto());
     }
 }
