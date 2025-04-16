@@ -100,9 +100,6 @@ class PostServiceTest {
 
     @Test
     void getProfilePostList() {
-        int page = 0;
-        int size = 2;
-
         PostDTO postDTO = new PostDTO();
         postDTO.setId(POST_ID);
         postDTO.setContent("test content");

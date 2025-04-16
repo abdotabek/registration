@@ -62,7 +62,7 @@ public class PostService {
 
     public void update(String id, PostCreatedDTO createdDTO) {
         PostEntity postEntity = postRepository.findById(id).orElseThrow(
-                () -> ExceptionUtil.throwNotFoundException(""));
+                () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("not.found")));
         String deletePhotoId = null;
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
 
