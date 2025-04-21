@@ -48,11 +48,11 @@ public class ProfileService {
     SmsHistoryService smsHistoryService;
     EmailHistoryService emailHistoryService;
     ProfileRoleRepository profileRoleRepository;
-    private final AttachService attachService;
+    AttachService attachService;
 
     public ProfileDTO get(Integer id) {
         return profileRepository.findById(id)
-                .map(mapper::toDTO)
+                .map(this::toDTO)
                 .orElseThrow(
                         () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.with.id.does.not.exist")));
     }
@@ -115,15 +115,8 @@ public class ProfileService {
 
     public AppResponse<String> updatePhoto(String photoId, AppLanguage language) {
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
-        /*ProfileEntity profile = new ProfileEntity();
-        profile.setPhotoId(attachId);
-        profileRepository.save(profile);*/
-
-//        ProfileEntity profile = profileRepository.findById(profileId).orElseThrow();
         ProfileEntity profile = mapper.toEntity(get(profileId));
         profileRepository.updatePhoto(profileId, photoId);
-
-
         if (profile.getPhotoId() != null && !profile.getPhotoId().equals(photoId)) {
             attachService.delete(profile.getPhotoId());
         }
@@ -156,7 +149,7 @@ public class ProfileService {
 
     public PageImpl<ProfileDTO> filter(ProfileFilterDTO filterDTO, int page, int size, AppLanguage language) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<ProfileDetailMapper> filterResult = null;
+        Page<ProfileDetailMapper> filterResult;
         if (filterDTO.getQuery() == null) {
             filterResult = profileRepository.customFilter(pageRequest);
         } else {
