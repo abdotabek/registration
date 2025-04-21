@@ -244,7 +244,7 @@ class ProfileServiceTest {
 
             Optional<ProfileEntity> updatedProfile = profileRepository.findByUsernameAndVisibleTrue(newUsername);
 
-            assertNotNull(updatedProfile);
+            assertTrue(updatedProfile.isPresent());
             assertEquals("998937877405", updatedProfile.get().getUsername());
             verify(profileRepository).findByUsernameAndVisibleTrue(newUsername);
         }
