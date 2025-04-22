@@ -10,7 +10,6 @@ import api.gossip.uz.dto.sms.SmsResendDTO;
 import api.gossip.uz.dto.sms.SmsVerificationDTO;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.service.AuthService;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +27,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Slf4j
 @ExtendWith(MockitoExtension.class)
 class AuthControllerTest {
     @InjectMocks
