@@ -89,7 +89,7 @@ public class AuthService {
                 profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
                 return bundleService.getMessage("email.ver.success", language);
             }
-        } catch (JwtException e) {
+        } catch (JwtException ignored) {
 
         }
         log.warn("Registration email verification failed {}", token);

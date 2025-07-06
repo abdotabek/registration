@@ -17,7 +17,6 @@ import java.util.List;
 public class ProfileRoleService {
 
     private final ProfileRoleRepository profileRoleRepository;
-    private final ProfileRoleMapper mapper;
     private final ResourceBundleService bundleService;
 
     public ProfileRoleDTO create(Integer profileId, ProfileRole profileRole) {

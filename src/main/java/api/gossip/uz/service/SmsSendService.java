@@ -39,7 +39,7 @@ public class SmsSendService {
     private String accountPassword;
 
 
-    private SmsSendResponseDTO sendSms(String phoneNumber, String message, String code, SmsType smsType) {
+    private void sendSms(String phoneNumber, String message, String code, SmsType smsType) {
         //check
         Long count = smsHistoryService.getSmsCount(phoneNumber);
         Long smsLimit = 3L;
@@ -52,7 +52,6 @@ public class SmsSendService {
         SmsSendResponseDTO result = sendSms(phoneNumber, message);
         //save
         smsHistoryService.create(phoneNumber, message, code, smsType);
-        return result;
     }
 
     public void sendRegistration(String phoneNumber, AppLanguage language) {
@@ -135,6 +134,7 @@ public class SmsSendService {
         try {
             System.out.println("---- Sms Sender new Token was token ----");
             SmsAuthResponseDTO response = restTemplate.postForObject(smsURL + "/auth/login", smsAuthDTO, SmsAuthResponseDTO.class);
+            assert response != null;
             return response.getMessage().getToken();
         } catch (RuntimeException e) {
             log.error("Get token account: {}, error {}", accountLogin, e.getMessage());
