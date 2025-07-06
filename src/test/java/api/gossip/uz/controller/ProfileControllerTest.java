@@ -3,7 +3,12 @@ package api.gossip.uz.controller;
 import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.CodeConfirmDTO;
 import api.gossip.uz.dto.ProfileDTO;
-import api.gossip.uz.dto.profile.*;
+import api.gossip.uz.dto.profile.ProfileDetailUpdateDTO;
+import api.gossip.uz.dto.profile.ProfileFilterDTO;
+import api.gossip.uz.dto.profile.ProfilePasswordUpdateDTO;
+import api.gossip.uz.dto.profile.ProfilePhotoUpdateDTO;
+import api.gossip.uz.dto.profile.ProfileStatusDTO;
+import api.gossip.uz.dto.profile.ProfileUsernameUpdateDTO;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.GeneralStatus;
 import api.gossip.uz.service.ProfileService;
@@ -23,7 +28,9 @@ import java.util.Objects;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProfileControllerTest {

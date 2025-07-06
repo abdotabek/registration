@@ -5,7 +5,6 @@ import api.gossip.uz.entity.ProfileRoleEntity;
 import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.ProfileRoleRepository;
-import api.gossip.uz.repository.mapper.ProfileRoleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

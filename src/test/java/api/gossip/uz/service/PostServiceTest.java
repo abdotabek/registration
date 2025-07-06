@@ -3,7 +3,11 @@ package api.gossip.uz.service;
 import api.gossip.uz.dto.AttachCreateDTO;
 import api.gossip.uz.dto.AttachDTO;
 import api.gossip.uz.dto.ProfileDTO;
-import api.gossip.uz.dto.post.*;
+import api.gossip.uz.dto.post.FilterResultDTO;
+import api.gossip.uz.dto.post.PostCreatedDTO;
+import api.gossip.uz.dto.post.PostDTO;
+import api.gossip.uz.dto.post.PostFilterDTO;
+import api.gossip.uz.dto.post.SimilarPostListDTO;
 import api.gossip.uz.dto.profile.PostAdminFilterDTO;
 import api.gossip.uz.entity.PostEntity;
 import api.gossip.uz.entity.ProfileEntity;
@@ -31,9 +35,18 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
