@@ -4,9 +4,7 @@ import api.gossip.uz.entity.ProfileEntity;
 import api.gossip.uz.enums.GeneralStatus;
 import api.gossip.uz.repository.ProfileRepository;
 import api.gossip.uz.service.ProfileRoleService;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +19,11 @@ import static api.gossip.uz.enums.ProfileRole.USER;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class InitController {
 
-    ProfileRepository profileRepository;
-    BCryptPasswordEncoder bCryptPasswordEncoder;
-    ProfileRoleService profileRoleService;
+    private final ProfileRepository profileRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ProfileRoleService profileRoleService;
 
     @GetMapping("/all")
     public String creteAdmin() {
@@ -42,7 +39,7 @@ public class InitController {
         profile.setStatus(GeneralStatus.ACTIVE);
         profile.setCreatedDate(LocalDateTime.now());
         profileRepository.save(profile);
-        profileRoleService.create(profile.getId(),USER /*ProfileRole.ROLE_USER*/);
+        profileRoleService.create(profile.getId(), USER /*ProfileRole.ROLE_USER*/);
         profileRoleService.create(profile.getId(), ADMIN/*ProfileRole.ROLE_ADMIN*/);
         return "DONE";
     }

@@ -3,31 +3,42 @@ package api.gossip.uz.controller;
 import api.gossip.uz.dto.AppResponse;
 import api.gossip.uz.dto.CodeConfirmDTO;
 import api.gossip.uz.dto.ProfileDTO;
-import api.gossip.uz.dto.profile.*;
+import api.gossip.uz.dto.profile.ProfileDetailUpdateDTO;
+import api.gossip.uz.dto.profile.ProfileFilterDTO;
+import api.gossip.uz.dto.profile.ProfilePasswordUpdateDTO;
+import api.gossip.uz.dto.profile.ProfilePhotoUpdateDTO;
+import api.gossip.uz.dto.profile.ProfileStatusDTO;
+import api.gossip.uz.dto.profile.ProfileUsernameUpdateDTO;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.service.ProfileService;
 import api.gossip.uz.util.PageUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/profiles")
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Tag(name = "ProfileController", description = "Api set with working Profile")
 @Slf4j
 public class ProfileController {
 
-    ProfileService profileService;
+    private final ProfileService profileService;
 
     @GetMapping("/{id}")
     @Operation(summary = "Get profile", description = "Api used get profile")
