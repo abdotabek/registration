@@ -85,9 +85,7 @@ public class ProfileService {
         if (!bCryptPasswordEncoder.matches(profilePasswordUpdateDTO.getOldPassword(), profile.getPassword())) {
             return new AppResponse<>(bundleService.getMessage("update.password.invalid.old", language));
         }
-
         profileRepository.updatePassword(profileId, bCryptPasswordEncoder.encode(profilePasswordUpdateDTO.getNewPassword()));
-
         return new AppResponse<>(bundleService.getMessage("update.password.success", language));
     }
 
