@@ -18,18 +18,18 @@ public class ProfileRoleService {
     private final ProfileRoleRepository profileRoleRepository;
     private final ResourceBundleService bundleService;
 
-    public ProfileRoleDTO create(Integer profileId, ProfileRole profileRole) {
+    public ProfileRoleDTO create(final Integer profileId, final ProfileRole profileRole) {
         if (profileId == null) {
             throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("not.found"));
         }
-        ProfileRoleEntity profileRoleEntity = new ProfileRoleEntity();
+        final ProfileRoleEntity profileRoleEntity = new ProfileRoleEntity();
         profileRoleEntity.setProfileId(profileId);
         profileRoleEntity.setRoles(profileRole);
         profileRoleEntity.setCreatedDate(LocalDateTime.now());
         return toDTO(profileRoleRepository.save(profileRoleEntity));
     }
 
-    public ProfileRoleDTO get(Integer id) {
+    public ProfileRoleDTO get(final Integer id) {
         return profileRoleRepository.findById(id).map(this::toDTO).orElseThrow(()
             -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.role.with.id.does.not.exist")));
     }
@@ -38,7 +38,7 @@ public class ProfileRoleService {
         return profileRoleRepository.findAll().stream().map(this::toDTO).toList();
     }
 
-    public ProfileRoleDTO update(Integer id, ProfileRoleDTO profileRoleDTO) {
+    public ProfileRoleDTO update(final Integer id, final ProfileRoleDTO profileRoleDTO) {
         profileRoleRepository.findById(id)
             .map(profileRole -> {
                 profileRole.setProfileId(profileRoleDTO.getProfileId());
@@ -50,16 +50,16 @@ public class ProfileRoleService {
         return profileRoleDTO;
     }
 
-    public void delete(Integer id) {
+    public void delete(final Integer id) {
         profileRoleRepository.deleteById(id);
     }
 
-    public void deleteRoles(Integer profileId) {
+    public void deleteRoles(final Integer profileId) {
         profileRoleRepository.deleteByProfileId(profileId);
     }
 
-    private ProfileRoleDTO toDTO(ProfileRoleEntity profileRoleEntity) {
-        ProfileRoleDTO profileRoleDTO = new ProfileRoleDTO();
+    private ProfileRoleDTO toDTO(final ProfileRoleEntity profileRoleEntity) {
+        final ProfileRoleDTO profileRoleDTO = new ProfileRoleDTO();
         profileRoleDTO.setId(profileRoleEntity.getId());
         profileRoleDTO.setProfileId(profileRoleEntity.getProfileId());
         profileRoleDTO.setRoles(profileRoleEntity.getRoles());

@@ -12,13 +12,13 @@ import java.util.Optional;
 
 public interface SmsHistoryRepository extends JpaRepository<SmsHistoryEntity, String> {
     //select count(*) from sms+history where phone =? and created_date between ? and ?
-    Long countByPhoneAndCreatedDateBetween(String phone, LocalDateTime from, LocalDateTime to);
+    Long countByPhoneAndCreatedDateBetween(final String phone, final LocalDateTime from, final LocalDateTime to);
 
     // select from SmsHistory where phone = ? order by created_date desc limit 1
-    Optional<SmsHistoryEntity> findTop1ByPhoneOrderByCreatedDateDesc(String phone);
+    Optional<SmsHistoryEntity> findTop1ByPhoneOrderByCreatedDateDesc(final String phone);
 
     @Modifying
     @Transactional
-    @Query("update SmsHistoryEntity set attemptCount = coalesce(attemptCount, 0) + 1 where id = :id" )
-    void updateAttemptCount(@Param("id") String id);
+    @Query("update SmsHistoryEntity set attemptCount = coalesce(attemptCount, 0) + 1 where id = :id")
+    void updateAttemptCount(@Param("id") final String id);
 }

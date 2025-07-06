@@ -39,52 +39,52 @@ public class SmsSendService {
     private String accountPassword;
 
 
-    private void sendSms(String phoneNumber, String message, String code, SmsType smsType) {
+    private void sendSms(final String phoneNumber, final String message, final String code, final SmsType smsType) {
         //check
-        Long count = smsHistoryService.getSmsCount(phoneNumber);
-        Long smsLimit = 3L;
+        final Long count = smsHistoryService.getSmsCount(phoneNumber);
+        final Long smsLimit = 3L;
         if (count >= smsLimit) {
             System.out.println("-----------Limit reached. Phone: " + phoneNumber);
             log.warn("Sms Limit reached. Phone: " + phoneNumber);
             throw new RuntimeException("Sms limit reached");
         }
         //send
-        SmsSendResponseDTO result = sendSms(phoneNumber, message);
+        final SmsSendResponseDTO result = sendSms(phoneNumber, message);
         //save
         smsHistoryService.create(phoneNumber, message, code, smsType);
     }
 
-    public void sendRegistration(String phoneNumber, AppLanguage language) {
-        String code = RandomUtil.getRandomSmsCode();
+    public void sendRegistration(final String phoneNumber, AppLanguage language) {
+        final String code = RandomUtil.getRandomSmsCode();
         String message = bundleService.getMessage("sms.registration.config.code", language);
         message = String.format(message, code);
         sendSms(phoneNumber, message, code, SmsType.REGISTRATION);
 
     }
 
-    public void sendResetPasswordSms(String phoneNumber, AppLanguage language) {
-        String code = RandomUtil.getRandomSmsCode();
+    public void sendResetPasswordSms(final String phoneNumber, AppLanguage language) {
+        final String code = RandomUtil.getRandomSmsCode();
         String message = bundleService.getMessage("sms.reset.password.confirm", language);
         message = String.format(message, code);
         sendSms(phoneNumber, message, code, SmsType.RESET_PASSWORD);
     }
 
-    public void sendUsernameChangeConfirmSms(String phoneNumber, AppLanguage language) {
-        String code = RandomUtil.getRandomSmsCode();
+    public void sendUsernameChangeConfirmSms(final String phoneNumber, AppLanguage language) {
+        final String code = RandomUtil.getRandomSmsCode();
         String message = bundleService.getMessage("sms.change.username.confirm", language);
         message = String.format(message, code);
         sendSms(phoneNumber, message, code, SmsType.CHANGE_USERNAME_CONFIRM);
     }
 
-    private SmsSendResponseDTO sendSms(String phoneNumber, String message) {
+    private SmsSendResponseDTO sendSms(final String phoneNumber, final String message) {
         //get token
-        String token = getToken();
+        final String token = getToken();
         //send sms
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         headers.set("Authorization", "Bearer " + token);
 
-        SmsRequestDTO smsRequestDTO = new SmsRequestDTO();
+        final SmsRequestDTO smsRequestDTO = new SmsRequestDTO();
         smsRequestDTO.setMobile_phone(phoneNumber);
         smsRequestDTO.setMessage(message);
         smsRequestDTO.setFrom("4546");
@@ -103,8 +103,8 @@ public class SmsSendService {
     private String getToken() {
         Optional<SmsProviderTokenHolderEntity> optional = smsProviderTokenHolderRepository.findTop1By();
         if (optional.isEmpty()) {
-            String token = getTokenFromProvider();
-            SmsProviderTokenHolderEntity entity = new SmsProviderTokenHolderEntity();
+            final String token = getTokenFromProvider();
+            final SmsProviderTokenHolderEntity entity = new SmsProviderTokenHolderEntity();
             entity.setToken(token);
             entity.setCreatedDate(LocalDateTime.now());
             entity.setExpiredDate(LocalDateTime.now().plusMonths(1));
@@ -112,12 +112,12 @@ public class SmsSendService {
             return token;
         }
         //id exist check it
-        SmsProviderTokenHolderEntity entity = optional.get();
+        final SmsProviderTokenHolderEntity entity = optional.get();
         if (LocalDateTime.now().isBefore(entity.getExpiredDate())) {    //if not expired
             return entity.getToken();
         }
         // get new token and updated
-        String token = getTokenFromProvider();
+        final String token = getTokenFromProvider();
         entity.setToken(token);
         entity.setCreatedDate(LocalDateTime.now());
         entity.setExpiredDate(LocalDateTime.now().plusMonths(1));
@@ -127,13 +127,13 @@ public class SmsSendService {
     }
 
     private String getTokenFromProvider() {
-        SmsAuthDTO smsAuthDTO = new SmsAuthDTO();
+        final SmsAuthDTO smsAuthDTO = new SmsAuthDTO();
         smsAuthDTO.setEmail(accountLogin);
         smsAuthDTO.setPassword(accountPassword);
 
         try {
             System.out.println("---- Sms Sender new Token was token ----");
-            SmsAuthResponseDTO response = restTemplate.postForObject(smsURL + "/auth/login", smsAuthDTO, SmsAuthResponseDTO.class);
+            final SmsAuthResponseDTO response = restTemplate.postForObject(smsURL + "/auth/login", smsAuthDTO, SmsAuthResponseDTO.class);
             assert response != null;
             return response.getMessage().getToken();
         } catch (RuntimeException e) {

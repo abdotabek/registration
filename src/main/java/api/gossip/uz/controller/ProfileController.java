@@ -42,13 +42,13 @@ public class ProfileController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get profile", description = "Api used get profile")
-    public ResponseEntity<ProfileDTO> get(@PathVariable("id") Integer id) {
+    public ResponseEntity<ProfileDTO> get(@PathVariable("id") final Integer id) {
         return ResponseEntity.ok(profileService.get(id));
     }
 
     @PutMapping
     @Operation(summary = "Update profile", description = "Api used update profile")
-    public ResponseEntity<AppResponse<String>> updateDetail(@Valid @RequestBody ProfileDetailUpdateDTO profileDetailUpdateDTO,
+    public ResponseEntity<AppResponse<String>> updateDetail(@Valid @RequestBody final ProfileDetailUpdateDTO profileDetailUpdateDTO,
                                                             @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
         log.info("Update profile : {}name", profileDetailUpdateDTO.getName());
         return ResponseEntity.ok(profileService.updateDetail(profileDetailUpdateDTO, language));
@@ -56,14 +56,14 @@ public class ProfileController {
 
     @PutMapping("/update-password")
     @Operation(summary = "Update password", description = "Api used update password")
-    public ResponseEntity<AppResponse<String>> updatePassword(@Valid @RequestBody ProfilePasswordUpdateDTO profilePasswordUpdateDTO,
+    public ResponseEntity<AppResponse<String>> updatePassword(@Valid @RequestBody final ProfilePasswordUpdateDTO profilePasswordUpdateDTO,
                                                               @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
         return ResponseEntity.ok(profileService.updatePassword(profilePasswordUpdateDTO, language));
     }
 
     @PutMapping("/photo")
     @Operation(summary = "Update photo", description = "Api used update photo")
-    public ResponseEntity<AppResponse<String>> updatePhoto(@Valid @RequestBody ProfilePhotoUpdateDTO profilePhotoUpdateDTO,
+    public ResponseEntity<AppResponse<String>> updatePhoto(@Valid @RequestBody final ProfilePhotoUpdateDTO profilePhotoUpdateDTO,
                                                            @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
         log.info("Update photo : {}photoId", profilePhotoUpdateDTO.getPhotoId());
         return ResponseEntity.ok(profileService.updatePhoto(profilePhotoUpdateDTO.getPhotoId(), language));
@@ -71,7 +71,7 @@ public class ProfileController {
 
     @PutMapping("/update-username")
     @Operation(summary = "Update username", description = "Api used username")
-    public ResponseEntity<AppResponse<String>> updateUsername(@Valid @RequestBody ProfileUsernameUpdateDTO profileUsernameUpdateDTO,
+    public ResponseEntity<AppResponse<String>> updateUsername(@Valid @RequestBody final ProfileUsernameUpdateDTO profileUsernameUpdateDTO,
                                                               @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
         log.info("Update username : {}username", profileUsernameUpdateDTO.getUsername());
         return ResponseEntity.ok(profileService.updateUsername(profileUsernameUpdateDTO, language));
@@ -79,7 +79,7 @@ public class ProfileController {
 
     @PutMapping("/username/confirm")
     @Operation(summary = "Confirm username", description = "Api used confirm username")
-    public ResponseEntity<AppResponse<String>> updateUsernameConfig(@Valid @RequestBody CodeConfirmDTO codeConfirmDTO,
+    public ResponseEntity<AppResponse<String>> updateUsernameConfig(@Valid @RequestBody final CodeConfirmDTO codeConfirmDTO,
                                                                     @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
         return ResponseEntity.ok(profileService.updateUsernameConfirm(codeConfirmDTO, language));
     }
@@ -87,7 +87,7 @@ public class ProfileController {
     @PostMapping("/filter")
     @Operation(summary = "Profile filter", description = "Api used for filtering profile list")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<ProfileDTO>> filter(@RequestBody ProfileFilterDTO filterDTO,
+    public ResponseEntity<Page<ProfileDTO>> filter(@RequestBody final ProfileFilterDTO filterDTO,
                                                    @RequestParam(value = "page", defaultValue = "1") int page,
                                                    @RequestParam(value = "size", defaultValue = "10") int size,
                                                    @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
@@ -99,8 +99,8 @@ public class ProfileController {
     @PutMapping("/status/{id}")
     @Operation(summary = "Change status", description = "Api used for change status from profile")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<AppResponse<String>> changeStatus(@PathVariable("id") Integer id,
-                                                            @RequestBody ProfileStatusDTO statusDTO,
+    public ResponseEntity<AppResponse<String>> changeStatus(@PathVariable("id") final Integer id,
+                                                            @RequestBody final ProfileStatusDTO statusDTO,
                                                             @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
         log.info("Change status : {}status", statusDTO.getStatus());
         return ResponseEntity.ok(profileService.changeStatus(id, statusDTO.getStatus(), language));
@@ -109,7 +109,7 @@ public class ProfileController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete profile", description = "Api used delete profile")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<AppResponse<String>> delete(@PathVariable("id") Integer id,
+    public ResponseEntity<AppResponse<String>> delete(@PathVariable("id") final Integer id,
                                                       @RequestHeader(value = "Accept-Language", defaultValue = "UZ") AppLanguage language) {
         return ResponseEntity.ok(profileService.delete(id, language));
     }

@@ -32,8 +32,8 @@ public class PostService {
     private final CustomPostRepository customPostRepository;
     private final ResourceBundleService bundleService;
 
-    public PostDTO create(PostCreatedDTO createdDTO) {
-        PostEntity entity = new PostEntity();
+    public PostDTO create(final PostCreatedDTO createdDTO) {
+        final PostEntity entity = new PostEntity();
         entity.setTitle(createdDTO.getTitle());
         entity.setContent(createdDTO.getContent());
         entity.setPhotoId(createdDTO.getPhoto().getId());
@@ -46,8 +46,8 @@ public class PostService {
     }
 
     public Page<PostDTO> getProfilePostList(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Integer id = SpringSecurityUtil.getCurrentProfileId();
+        final PageRequest pageRequest = PageRequest.of(page, size);
+        final Integer id = SpringSecurityUtil.getCurrentProfileId();
         Page<PostEntity> postEntities = postRepository.getAllByProfileIdAndVisibleTrue(id, pageRequest);
 
         List<PostDTO> list = postEntities.getContent().stream()
@@ -56,16 +56,16 @@ public class PostService {
         return new PageImpl<>(list, pageRequest, postEntities.getTotalElements());
     }
 
-    public PostDTO getById(String id) {
+    public PostDTO getById(final String id) {
         return this.toDTO(postRepository.findById(id).orElseThrow(
             () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("post.with.id.does.not.exist"))));
     }
 
-    public void update(String id, PostCreatedDTO createdDTO) {
-        PostEntity postEntity = postRepository.findById(id).orElseThrow(
+    public void update(final String id, final PostCreatedDTO createdDTO) {
+        final PostEntity postEntity = postRepository.findById(id).orElseThrow(
             () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("not.found")));
         String deletePhotoId = null;
-        Integer profileId = SpringSecurityUtil.getCurrentProfileId();
+        final Integer profileId = SpringSecurityUtil.getCurrentProfileId();
 
         if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN) && !postEntity.getProfileId().equals(profileId)) {
             throw new RuntimeException(bundleService.getMessage("not.have.permission"));
@@ -81,8 +81,8 @@ public class PostService {
         }
     }
 
-    public void changeStatus(String id, PostCreatedDTO createdDTO) {
-        PostEntity postEntity = postRepository.findById(id).orElseThrow(
+    public void changeStatus(final String id, final PostCreatedDTO createdDTO) {
+        final PostEntity postEntity = postRepository.findById(id).orElseThrow(
             () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("post.with.id.does.not.exist")));
         if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN)) {
             throw new RuntimeException(bundleService.getMessage("not.have.permission"));
@@ -93,10 +93,10 @@ public class PostService {
         postRepository.save(postEntity);
     }
 
-    public void deleteById(String id) {
-        PostEntity entity = postRepository.findById(id).orElseThrow(
+    public void deleteById(final String id) {
+        final PostEntity entity = postRepository.findById(id).orElseThrow(
             () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("not.found")));
-        Integer profileId = SpringSecurityUtil.getCurrentProfileId();
+        final Integer profileId = SpringSecurityUtil.getCurrentProfileId();
         if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN) && !entity.getProfileId().equals(profileId)) {
             throw new RuntimeException(bundleService.getMessage("not.have.permission"));
         }
@@ -104,15 +104,15 @@ public class PostService {
         bundleService.getMessage("post.delete.success");
     }
 
-    public PageImpl<PostDTO> filter(PostFilterDTO filterDTO, int page, int size) {
-        FilterResultDTO<PostEntity> resultDTO =
+    public PageImpl<PostDTO> filter(final PostFilterDTO filterDTO, int page, int size) {
+        final FilterResultDTO<PostEntity> resultDTO =
             customPostRepository.filter(filterDTO, page, size);
         List<PostDTO> dtoList = resultDTO.getList().stream()
             .map(this::toDTO).toList();
         return new PageImpl<>(dtoList, PageRequest.of(page, size), resultDTO.getTotalCount());
     }
 
-    public Page<PostDTO> adminFilter(PostAdminFilterDTO filterDTO, int page, int size) {
+    public Page<PostDTO> adminFilter(final PostAdminFilterDTO filterDTO, int page, int size) {
         FilterResultDTO<Object[]> resultDTO =
             customPostRepository.filter(filterDTO, page, size);
         List<PostDTO> dtoList = resultDTO.getList().stream()
@@ -120,13 +120,13 @@ public class PostService {
         return new PageImpl<>(dtoList, PageRequest.of(page, size), resultDTO.getTotalCount());
     }
 
-    public List<PostDTO> getSimilarPostList(SimilarPostListDTO similarPostListDTO) {
+    public List<PostDTO> getSimilarPostList(final SimilarPostListDTO similarPostListDTO) {
         List<PostEntity> postList = postRepository.getSimilarPostList(similarPostListDTO.getExceptId());
         return postList.stream().toList().stream().map(this::toDTO).toList();
     }
 
-    protected PostDTO toDTO(PostEntity postEntity) {
-        PostDTO postDTO = new PostDTO();
+    protected PostDTO toDTO(final PostEntity postEntity) {
+        final PostDTO postDTO = new PostDTO();
         postDTO.setId(postEntity.getId());
         postDTO.setTitle(postEntity.getTitle());
         postDTO.setContent(postEntity.getContent());
@@ -135,8 +135,8 @@ public class PostService {
         return postDTO;
     }
 
-    private PostDTO toDTO(Object[] obj) {
-        PostDTO postDTO = new PostDTO();
+    private PostDTO toDTO(final Object[] obj) {
+        final PostDTO postDTO = new PostDTO();
         postDTO.setId((String) obj[0]);
         postDTO.setTitle((String) obj[1]);
         if (obj[2] != null) {
@@ -144,7 +144,7 @@ public class PostService {
         }
         postDTO.setCreatedDate((LocalDateTime) obj[3]);
 
-        ProfileDTO profileDTO = new ProfileDTO();
+        final ProfileDTO profileDTO = new ProfileDTO();
         profileDTO.setId((Integer) obj[4]);
         profileDTO.setName((String) obj[5]);
         profileDTO.setUsername((String) obj[6]);

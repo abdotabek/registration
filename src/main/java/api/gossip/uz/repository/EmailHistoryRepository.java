@@ -12,14 +12,14 @@ import java.util.Optional;
 
 public interface EmailHistoryRepository extends JpaRepository<EmailHistoryEntity, Integer> {
     //select count(*) from email_history where email = ? and created_date between ? and ?
-    Long countByEmailAndCreatedDateBetween(String email, LocalDateTime from, LocalDateTime to);
+    Long countByEmailAndCreatedDateBetween(final String email, final LocalDateTime from, final LocalDateTime to);
 
     // select * from email_history where email = ? order by created_date desc limit 1
-    Optional<EmailHistoryEntity> findTop1ByEmailOrderByCreatedDateDesc(String email);
+    Optional<EmailHistoryEntity> findTop1ByEmailOrderByCreatedDateDesc(final String email);
 
     @Modifying
     @Transactional
-    @Query("update EmailHistoryEntity set attemptCount = coalesce(attemptCount, 0) + 1 where id = :id" )
-    void updateAttemptCount(@Param("id") Integer id);
+    @Query("update EmailHistoryEntity set attemptCount = coalesce(attemptCount, 0) + 1 where id = :id")
+    void updateAttemptCount(@Param("id") final Integer id);
 
 }

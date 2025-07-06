@@ -35,14 +35,14 @@ public class ProfileRoleController {
 
     @PostMapping("/{id}")
     @Operation(summary = "Create profile role", description = "Api used cred profile role")
-    public ResponseEntity<ProfileRoleDTO> create(@PathVariable("id") Integer id, @RequestBody ProfileRole profileRole) {
+    public ResponseEntity<ProfileRoleDTO> create(@PathVariable("id") final Integer id, @RequestBody final ProfileRole profileRole) {
         log.info("Create role : {}profileRole", profileRole);
         return ResponseEntity.status(HttpStatus.CREATED).body(profileRoleService.create(id, profileRole));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get profile_role by id", description = "Api used get profile_role by id")
-    public ResponseEntity<ProfileRoleDTO> get(@PathVariable("id") Integer id) {
+    public ResponseEntity<ProfileRoleDTO> get(@PathVariable("id") final Integer id) {
         log.info("Get profile : {}profile", id);
         return ResponseEntity.ok(profileRoleService.get(id));
     }
@@ -55,14 +55,14 @@ public class ProfileRoleController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update profile_role", description = "Api used update profile_role bu id")
-    public ResponseEntity<ProfileRoleDTO> update(@PathVariable("id") Integer id, @RequestBody ProfileRoleDTO profileRoleDTO) {
+    public ResponseEntity<ProfileRoleDTO> update(@PathVariable("id") final Integer id, @RequestBody final ProfileRoleDTO profileRoleDTO) {
         log.info("Update profile : {}profileId, {}roles, {}createdDate", profileRoleDTO.getProfileId(), profileRoleDTO.getRoles(), profileRoleDTO.getCreatedDate());
         return ResponseEntity.ok(profileRoleService.update(id, profileRoleDTO));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete profile_role", description = "Api used delete profile_role by id")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") final Integer id) {
         profileRoleService.delete(id);
         return ResponseEntity.ok().build();
     }

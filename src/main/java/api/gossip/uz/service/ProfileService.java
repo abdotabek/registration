@@ -47,20 +47,20 @@ public class ProfileService {
     private final ProfileRoleRepository profileRoleRepository;
     private final AttachService attachService;
 
-    public ProfileDTO get(Integer id) {
+    public ProfileDTO get(final Integer id) {
         return profileRepository.findById(id)
             .map(this::toDTO)
             .orElseThrow(
                 () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.with.id.does.not.exist")));
     }
 
-    public ProfileEntity getVerification(Integer id) {
+    public ProfileEntity getVerification(final Integer id) {
         return profileRepository.findByIdAndVisibleTrue(id)
             .orElseThrow(() -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.with.id.does.not.exist")));
     }
 
-    public AppResponse<String> updateDetail(ProfileDetailUpdateDTO profileDetailUpdateDTO, AppLanguage language) {
-        Integer profileId = SpringSecurityUtil.getCurrentProfileId();
+    public AppResponse<String> updateDetail(final ProfileDetailUpdateDTO profileDetailUpdateDTO, AppLanguage language) {
+        final  Integer profileId = SpringSecurityUtil.getCurrentProfileId();
 
         //update profile detail я обновляю пока только имя профиля
         // в этом методе обновится весь поля
@@ -73,14 +73,14 @@ public class ProfileService {
         return new AppResponse<>(bundleService.getMessage("profile.detail.update.success", language));
     }
 
-    public AppResponse<String> updatePassword(ProfilePasswordUpdateDTO profilePasswordUpdateDTO, AppLanguage language) {
+    public AppResponse<String> updatePassword(final ProfilePasswordUpdateDTO profilePasswordUpdateDTO, AppLanguage language) {
 
-        Integer profileId = SpringSecurityUtil.getCurrentProfileId();
+        final  Integer profileId = SpringSecurityUtil.getCurrentProfileId();
         Optional<ProfileEntity> optionalProfile = profileRepository.findById(profileId);
         if (optionalProfile.isEmpty()) {
             return new AppResponse<>(bundleService.getMessage("profile.not.found", language));
         }
-        ProfileEntity profile = optionalProfile.get();
+        final  ProfileEntity profile = optionalProfile.get();
 
         if (!bCryptPasswordEncoder.matches(profilePasswordUpdateDTO.getOldPassword(), profile.getPassword())) {
             return new AppResponse<>(bundleService.getMessage("update.password.invalid.old", language));
@@ -91,7 +91,7 @@ public class ProfileService {
         return new AppResponse<>(bundleService.getMessage("update.password.success", language));
     }
 
-    public AppResponse<String> updateUsername(ProfileUsernameUpdateDTO profileUsernameUpdateDTO, AppLanguage language) {
+    public AppResponse<String> updateUsername(final ProfileUsernameUpdateDTO profileUsernameUpdateDTO, AppLanguage language) {
         Optional<ProfileEntity> optionalProfile = profileRepository.findByUsernameAndVisibleTrue(profileUsernameUpdateDTO.getUsername());
         if (optionalProfile.isPresent()) {
             return new AppResponse<>(bundleService.getMessage("email.phone.exist", language));

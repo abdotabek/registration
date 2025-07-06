@@ -38,7 +38,7 @@ public class PostController {
 
     @PostMapping
     @Operation(summary = "Create post", description = "Api used for post create")
-    public ResponseEntity<PostDTO> create(@RequestBody PostCreatedDTO postCreatedDTO) {
+    public ResponseEntity<PostDTO> create(@RequestBody final PostCreatedDTO postCreatedDTO) {
         log.info("Create : {} post{} status{}", postCreatedDTO.getContent(), postCreatedDTO.getPhoto(), postCreatedDTO.getStatus());
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.create(postCreatedDTO));
     }
@@ -53,14 +53,14 @@ public class PostController {
 
     @GetMapping("/public/{id}")
     @Operation(summary = "Get post by id", description = "Api used for postList")
-    public ResponseEntity<PostDTO> get(@PathVariable("id") String id) {
+    public ResponseEntity<PostDTO> get(@PathVariable("id") final String id) {
         log.info("Get post by id : {} id", id);
         return ResponseEntity.ok(postService.getById(id));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Put post by id", description = "Api used from post updated")
-    public ResponseEntity<Void> update(@Valid @PathVariable String id, @RequestBody PostCreatedDTO createdDTO) {
+    public ResponseEntity<Void> update(@Valid @PathVariable final String id, @RequestBody final PostCreatedDTO createdDTO) {
         postService.update(id, createdDTO);
         log.info("Update post : {} content, {} title", createdDTO.getContent(), createdDTO.getTitle());
         return ResponseEntity.ok().build();
@@ -68,7 +68,7 @@ public class PostController {
 
     @PutMapping("/status/{id}")
     @Operation(summary = "Put post change status", description = "Api used from update status")
-    public ResponseEntity<Void> changeStatus(@PathVariable String id, @RequestBody PostCreatedDTO createdDTO) {
+    public ResponseEntity<Void> changeStatus(@PathVariable final String id, @RequestBody final PostCreatedDTO createdDTO) {
         postService.changeStatus(id, createdDTO);
         log.info("Change status : {} status", createdDTO.getStatus());
         return ResponseEntity.ok().build();
@@ -76,14 +76,14 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete post by id", description = "Api used from post deleted")
-    public ResponseEntity<AppResponse<String>> delete(@Valid @PathVariable String id) {
+    public ResponseEntity<AppResponse<String>> delete(@Valid @PathVariable final String id) {
         postService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/public/filter")
     @Operation(summary = "Create filter", description = "Api used from filer pagination")
-    public ResponseEntity<Page<PostDTO>> filter(@Valid @RequestBody PostFilterDTO filter,
+    public ResponseEntity<Page<PostDTO>> filter(@Valid @RequestBody final PostFilterDTO filter,
                                                 @RequestParam(value = "page", defaultValue = "1") int page,
                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
         log.info("Create filter : {} query, {} exceptId", filter.getQuery(), filter.getExceptId());
@@ -92,7 +92,7 @@ public class PostController {
 
     @PostMapping("/public/similar")
     @Operation(summary = "Get similar post list", description = "Api used for getting similar post list")
-    public ResponseEntity<List<PostDTO>> similarPostList(@Valid @RequestBody SimilarPostListDTO similarPostListDTO) {
+    public ResponseEntity<List<PostDTO>> similarPostList(@Valid @RequestBody final SimilarPostListDTO similarPostListDTO) {
         log.info("Get post list {} exceptId", similarPostListDTO.getExceptId());
         return ResponseEntity.ok(postService.getSimilarPostList(similarPostListDTO));
     }
@@ -100,7 +100,7 @@ public class PostController {
     @PostMapping("/filter")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Post filter for admin", description = "Api used for filter post list")
-    public ResponseEntity<Page<PostDTO>> filter(@RequestBody PostAdminFilterDTO filterDTO,
+    public ResponseEntity<Page<PostDTO>> filter(@RequestBody final PostAdminFilterDTO filterDTO,
                                                 @RequestParam(value = "page", defaultValue = "1") int page,
                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
         log.info("Create filter : {}profileQuery, {}postQuery", filterDTO.getProfileQuery(), filterDTO.getPostQuery());

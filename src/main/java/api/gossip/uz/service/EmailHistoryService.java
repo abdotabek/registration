@@ -18,8 +18,8 @@ public class EmailHistoryService {
     private final EmailHistoryRepository emailHistoryRepository;
     private final ResourceBundleService bundleService;
 
-    public void create(String email, String code, SmsType emailType) {
-        EmailHistoryEntity entity = new EmailHistoryEntity();
+    public void create(final String email, final String code, final SmsType emailType) {
+        final EmailHistoryEntity entity = new EmailHistoryEntity();
         entity.setEmail(email);
         entity.setCode(code);
         entity.setEmailType(emailType);
@@ -28,17 +28,17 @@ public class EmailHistoryService {
         emailHistoryRepository.save(entity);
     }
 
-    public Long getEmailCount(String email) {
-        LocalDateTime now = LocalDateTime.now();
+    public Long getEmailCount(final String email) {
+        final LocalDateTime now = LocalDateTime.now();
         return emailHistoryRepository.countByEmailAndCreatedDateBetween(email, now.minusMinutes(1), now);
     }
 
-    public void check(String email, String code, AppLanguage language) {
+    public void check(final String email, final String code, AppLanguage language) {
         Optional<EmailHistoryEntity> optional = emailHistoryRepository.findTop1ByEmailOrderByCreatedDateDesc(email);
         if (optional.isEmpty()) {
             throw ExceptionUtil.throwBadRequestException((bundleService.getMessage("profile.ver.failed", language)));
         }
-        EmailHistoryEntity entity = optional.get();
+        final EmailHistoryEntity entity = optional.get();
         if (entity.getAttemptCount() >= 3) {
             throw ExceptionUtil.throwBadRequestException(bundleService.getMessage("attempt.count", language));
         }
@@ -47,7 +47,7 @@ public class EmailHistoryService {
             emailHistoryRepository.updateAttemptCount(entity.getId());   //update attempt count
             throw ExceptionUtil.throwBadRequestException(bundleService.getMessage("profile.ver.failed", language));
         }
-        LocalDateTime expDate = entity.getCreatedDate().plusMinutes(2);
+        final LocalDateTime expDate = entity.getCreatedDate().plusMinutes(2);
         if (LocalDateTime.now().isAfter(expDate)) {
             throw ExceptionUtil.throwBadRequestException(bundleService.getMessage("profile.ver.failed", language));
         }

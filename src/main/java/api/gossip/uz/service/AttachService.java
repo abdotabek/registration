@@ -45,27 +45,27 @@ public class AttachService {
     private String attachUrl;
 
 
-    public AttachDTO upload(MultipartFile multipartFile) {
+    public AttachDTO upload(final MultipartFile multipartFile) {
         if (multipartFile.isEmpty()) {
             throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("file.not.found"));
         }
         try {
-            String pathFolder = getYmDString(); // 2024/09/27
-            String key = UUID.randomUUID().toString();
-            String extension = getExtension(Objects.requireNonNull(multipartFile.getOriginalFilename())); // .jpg, .png, .mp4
+            final String pathFolder = getYmDString(); // 2024/09/27
+            final String key = UUID.randomUUID().toString();
+            final String extension = getExtension(Objects.requireNonNull(multipartFile.getOriginalFilename())); // .jpg, .png, .mp4
 
             // create folder if not exist
-            File folder = new File(folderName + "/" + pathFolder);
+            final File folder = new File(folderName + "/" + pathFolder);
             if (!folder.exists()) {
                 boolean file = folder.mkdirs();
             }
             // save to system
             byte[] bytes = multipartFile.getBytes();
-            Path path = Paths.get(folderName + "/" + pathFolder + "/" + key + "." + extension);
+            final Path path = Paths.get(folderName + "/" + pathFolder + "/" + key + "." + extension);
             Files.write(path, bytes);
 
             //attach to db
-            AttachEntity attachEntity = new AttachEntity();
+            final AttachEntity attachEntity = new AttachEntity();
             attachEntity.setId(key + "." + extension);
             attachEntity.setPath(pathFolder);
             attachEntity.setSize(multipartFile.getSize());
@@ -80,9 +80,9 @@ public class AttachService {
         return null;
     }
 
-    public ResponseEntity<Resource> open(String id) {
-        AttachEntity entity = getEntity(id);
-        Path filePath = Paths.get(folderName + "/" + entity.getPath() + "/" + entity.getId()).normalize();
+    public ResponseEntity<Resource> open(final String id) {
+        final AttachEntity entity = getEntity(id);
+        final Path filePath = Paths.get(folderName + "/" + entity.getPath() + "/" + entity.getId()).normalize();
         Resource resource = null;
         try {
             resource = new UrlResource(filePath.toUri());
@@ -102,11 +102,11 @@ public class AttachService {
         }
     }
 
-    public ResponseEntity<Resource> download(String id) {
+    public ResponseEntity<Resource> download(final String id) {
         try {
-            AttachEntity attachEntity = getEntity(id);
+            final AttachEntity attachEntity = getEntity(id);
             Path filePath = Paths.get(getPath(attachEntity)).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
+            final Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists() || resource.isReadable()) {
                 return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
@@ -120,8 +120,8 @@ public class AttachService {
         }
     }
 
-    public boolean delete(String id) {
-        AttachEntity entity = getEntity(id);
+    public boolean delete(final String id) {
+        final AttachEntity entity = getEntity(id);
         attachRepository.delete(id);
         File file = new File(folderName + "/" + entity.getPath() + "/" + entity.getId());
         boolean result = false;
@@ -144,12 +144,12 @@ public class AttachService {
         return year + "/" + month + "/" + day;
     }
 
-    public String getExtension(String fileName) {
+    public String getExtension(final String fileName) {
         int lastIndex = fileName.lastIndexOf(".");
         return fileName.substring(lastIndex + 1);
     }
 
-    public AttachEntity getEntity(String id) {
+    public AttachEntity getEntity(final String id) {
         Optional<AttachEntity> optional = attachRepository.findById(id);
         if (optional.isEmpty()) {
             System.out.println("Attach error : file not found");
@@ -158,16 +158,16 @@ public class AttachService {
         return optional.get();
     }
 
-    private String getPath(AttachEntity attachEntity) {
+    private String getPath(final AttachEntity attachEntity) {
         return folderName + "/" + attachEntity.getPath() + "/" + attachEntity.getId();
     }
 
-    public String openURL(String fileName) {
+    public String openURL(final String fileName) {
         return attachUrl + "/open/" + fileName;
     }
 
     protected AttachDTO toDTO(AttachEntity attachEntity) {
-        AttachDTO attachDTO = new AttachDTO();
+        final AttachDTO attachDTO = new AttachDTO();
         attachDTO.setId(attachEntity.getId());
         attachDTO.setSize(attachEntity.getSize());
         attachDTO.setOriginName(attachEntity.getOriginName());
@@ -178,9 +178,9 @@ public class AttachService {
     }
 
 
-    protected AttachDTO attachDTO(String photoId) {
+    protected AttachDTO attachDTO(final String photoId) {
         if (photoId == null) return null;
-        AttachDTO attachDTO = new AttachDTO();
+        final AttachDTO attachDTO = new AttachDTO();
         attachDTO.setId(photoId);
         attachDTO.setUrl(openURL(photoId));
         return attachDTO;

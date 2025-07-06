@@ -31,48 +31,48 @@ public class EmailSendingService {
     private final EmailHistoryService emailHistoryService;
     private final ResourceBundleService bundleService;
 
-    public void sendRegistrationEmail(String email, Integer profileId, AppLanguage language) {
+    public void sendRegistrationEmail(final String email, final Integer profileId, AppLanguage language) {
         /*    */
-        String subject = "Complete registration";
+        final String subject = "Complete registration";
         String body = "Please click to link for completing to registration: %s/api/auths/registration/email-verification/%s?lang=%s";
         body = String.format(body, serverDomain, JwtUtil.encode(profileId), language.name());
         sendEmail(email, subject, body);
     }
 
-    public void sendResetPasswordEmail(String email, AppLanguage language) {
-        String subject = "Reset Password Confirmation";
-        String code = RandomUtil.getRandomSmsCode();
-        String body = "This is your confirm code for reset password " + code;
+    public void sendResetPasswordEmail(final String email, AppLanguage language) {
+        final String subject = "Reset Password Confirmation";
+        final String code = RandomUtil.getRandomSmsCode();
+        final String body = "This is your confirm code for reset password " + code;
         checkAndSendMineEmail(email, subject, body, code);
     }
 
-    public void sendUsernameChangeEmail(String email, AppLanguage language) {
-        String subject = "username change confirmation";
-        String code = RandomUtil.getRandomSmsCode();
-        String body = "this is your confirm code for changing : " + code;
+    public void sendUsernameChangeEmail(final String email, AppLanguage language) {
+        final String subject = "username change confirmation";
+        final String code = RandomUtil.getRandomSmsCode();
+        final String body = "this is your confirm code for changing : " + code;
         checkAndSendMineEmail(email, subject, body, code);
     }
 
-    protected void checkAndSendMineEmail(String email, String subject, String body, String code) {
-        Long emailLimit = 3L;
+    protected void checkAndSendMineEmail(final String email, final String subject, final String body, final String code) {
+        final Long emailLimit = 3L;
         //check
-        Long count = emailHistoryService.getEmailCount(email);
+        final Long count = emailHistoryService.getEmailCount(email);
         if (count >= emailLimit) {
             System.out.println("---- Email limit reached. Email : " + email);
             throw ExceptionUtil.throwBadRequestException(bundleService.getMessage("sms.limit.reached"));
         }
         //send
-        sendMimeEmail(email, subject, body);
+        this.sendMimeEmail(email, subject, body);
         //create
         emailHistoryService.create(email, code, SmsType.RESET_PASSWORD);
     }
 
-    protected void sendMimeEmail(String email, String subject, String body) {
+    protected void sendMimeEmail(final String email, final String subject, final String body) {
         try {
-            MimeMessage msg = javaMailSender.createMimeMessage();
+            final MimeMessage msg = javaMailSender.createMimeMessage();
             msg.setFrom(fromAccount);
 
-            MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+            final MimeMessageHelper helper = new MimeMessageHelper(msg, true);
             helper.setTo(email);
             helper.setSubject(subject);
             helper.setText(body, true);
@@ -82,8 +82,8 @@ public class EmailSendingService {
         }
     }
 
-    protected void sendEmail(String mail, String subject, String body) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+    protected void sendEmail(final String mail, final String subject, final String body) {
+        final SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(fromAccount);
         simpleMailMessage.setTo(mail);
         simpleMailMessage.setSubject(subject);

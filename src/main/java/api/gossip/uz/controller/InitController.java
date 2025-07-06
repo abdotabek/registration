@@ -31,7 +31,7 @@ public class InitController {
         if (exist.isPresent()) {
             return "Present";
         }
-        ProfileEntity profile = new ProfileEntity();
+        final ProfileEntity profile = new ProfileEntity();
         profile.setName("ADMIN");
         profile.setUsername("admin@gmail.com");
         profile.setVisible(true);

@@ -17,8 +17,8 @@ public class SmsHistoryService {
     private final SmsHistoryRepository smsHistoryRepository;
     private final ResourceBundleService bundleService;
 
-    public void create(String phoneNumber, String message, String code, SmsType smsType) {
-        SmsHistoryEntity smsHistoryEntity = new SmsHistoryEntity();
+    public void create(final String phoneNumber, final String message, final String code, final SmsType smsType) {
+        final SmsHistoryEntity smsHistoryEntity = new SmsHistoryEntity();
         smsHistoryEntity.setPhone(phoneNumber);
         smsHistoryEntity.setMessage(message);
         smsHistoryEntity.setCode(code);
@@ -28,17 +28,17 @@ public class SmsHistoryService {
         smsHistoryRepository.save(smsHistoryEntity);
     }
 
-    public Long getSmsCount(String phone) {
-        LocalDateTime now = LocalDateTime.now();
+    public Long getSmsCount(final String phone) {
+        final LocalDateTime now = LocalDateTime.now();
         return smsHistoryRepository.countByPhoneAndCreatedDateBetween(phone, now.minusMinutes(2), now);
     }
 
-    public void check(String phoneNumber, String code, AppLanguage language) {
+    public void check(final String phoneNumber, final String code, AppLanguage language) {
         Optional<SmsHistoryEntity> optional = smsHistoryRepository.findTop1ByPhoneOrderByCreatedDateDesc(phoneNumber);
         if (optional.isEmpty()) {
             throw new RuntimeException(bundleService.getMessage("profile.ver.failed", language));
         }
-        SmsHistoryEntity entity = optional.get();
+        final SmsHistoryEntity entity = optional.get();
         //attempt count
         if (entity.getAttemptCount() >= 3) {
             throw new RuntimeException(bundleService.getMessage("attempt.count", language));
@@ -49,7 +49,7 @@ public class SmsHistoryService {
             throw new RuntimeException(bundleService.getMessage("profile.ver.failed", language));
         }
         //check time
-        LocalDateTime expDate = entity.getCreatedDate().plusMinutes(2);
+        final LocalDateTime expDate = entity.getCreatedDate().plusMinutes(2);
         if (LocalDateTime.now().isAfter(expDate)) {
             throw new RuntimeException(bundleService.getMessage("profile.ver.failed", language));
         }

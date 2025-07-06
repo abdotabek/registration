@@ -27,19 +27,19 @@ public class AttachController {
 
     @PostMapping("/upload")
     @Operation(summary = "Upload", description = "Api used upload")
-    public ResponseEntity<AttachDTO> create(@RequestParam("multipartFile") MultipartFile multipartFile) {
+    public ResponseEntity<AttachDTO> create(@RequestParam("multipartFile") final MultipartFile multipartFile) {
         return ResponseEntity.ok(attachService.upload(multipartFile));
     }
 
     @GetMapping("/open/{fileName}")
     @Operation(summary = "Open by filename", description = "Api used open")
-    public ResponseEntity<Resource> open(@PathVariable String fileName) {
+    public ResponseEntity<Resource> open(@PathVariable final String fileName) {
         return attachService.open(fileName);
     }
 
     @GetMapping("/download/{fileName}")
     @Operation(summary = "Download by file name", description = "Api used download")
-    public ResponseEntity<Resource> download(@PathVariable("fileName") String fileName) {
+    public ResponseEntity<Resource> download(@PathVariable("fileName") final String fileName) {
         return attachService.download(fileName);
     }
 
@@ -52,7 +52,7 @@ public class AttachController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete from attach", description = "Api used from delete attach")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") String id) {
+    public ResponseEntity<Boolean> delete(@PathVariable("id") final String id) {
         return ResponseEntity.ok(attachService.delete(id));
     }
 }
