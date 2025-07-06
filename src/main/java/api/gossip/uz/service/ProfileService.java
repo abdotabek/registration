@@ -94,17 +94,14 @@ public class ProfileService {
         if (optionalProfile.isPresent()) {
             return new AppResponse<>(bundleService.getMessage("email.phone.exist", language));
         }
-
         if (PhoneUtil.isPhone(profileUsernameUpdateDTO.getUsername())) {
             smsSendService.sendUsernameChangeConfirmSms(profileUsernameUpdateDTO.getUsername(), language);
         }
         if (EmailUtil.isEmail(profileUsernameUpdateDTO.getUsername())) {
             emailSendingService.sendUsernameChangeEmail(profileUsernameUpdateDTO.getUsername(), language);
         }
-
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
         profileRepository.updateTempUsername(profileId, profileUsernameUpdateDTO.getUsername());
-
         return new AppResponse<>(bundleService.getMessage("reset.password.response", language));
     }
 
