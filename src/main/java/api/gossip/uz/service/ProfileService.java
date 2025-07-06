@@ -21,9 +21,7 @@ import api.gossip.uz.util.EmailUtil;
 import api.gossip.uz.util.JwtUtil;
 import api.gossip.uz.util.PhoneUtil;
 import api.gossip.uz.util.SpringSecurityUtil;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -36,30 +34,29 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ProfileService {
 
-    ProfileRepository profileRepository;
-    ProfileMapper mapper;
-    ResourceBundleService bundleService;
-    BCryptPasswordEncoder bCryptPasswordEncoder;
-    SmsSendService smsSendService;
-    EmailSendingService emailSendingService;
-    SmsHistoryService smsHistoryService;
-    EmailHistoryService emailHistoryService;
-    ProfileRoleRepository profileRoleRepository;
-    AttachService attachService;
+    private final ProfileRepository profileRepository;
+    private final ProfileMapper mapper;
+    private final ResourceBundleService bundleService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final SmsSendService smsSendService;
+    private final EmailSendingService emailSendingService;
+    private final SmsHistoryService smsHistoryService;
+    private final EmailHistoryService emailHistoryService;
+    private final ProfileRoleRepository profileRoleRepository;
+    private final AttachService attachService;
 
     public ProfileDTO get(Integer id) {
         return profileRepository.findById(id)
-                .map(this::toDTO)
-                .orElseThrow(
-                        () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.with.id.does.not.exist")));
+            .map(this::toDTO)
+            .orElseThrow(
+                () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.with.id.does.not.exist")));
     }
 
     public ProfileEntity getVerification(Integer id) {
         return profileRepository.findByIdAndVisibleTrue(id)
-                .orElseThrow(() -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.with.id.does.not.exist")));
+            .orElseThrow(() -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.with.id.does.not.exist")));
     }
 
     public AppResponse<String> updateDetail(ProfileDetailUpdateDTO profileDetailUpdateDTO, AppLanguage language) {
@@ -177,9 +174,9 @@ public class ProfileService {
         profileDTO.setUsername(entity.getUsername());
         if (entity.getRoleeList() != null) {
             profileDTO.setRoleList(entity.getRoleeList()
-                    .stream()
-                    .map(ProfileRoleEntity::getRoles)
-                    .toList());
+                .stream()
+                .map(ProfileRoleEntity::getRoles)
+                .toList());
         }
         profileDTO.setCreatedDate(entity.getCreatedDate());
         profileDTO.setPhoto(attachService.attachDTO(entity.getPhotoId()));
@@ -194,8 +191,8 @@ public class ProfileService {
         profileDTO.setUsername(mapper.getUsername());
         if (mapper.getRoles() != null) {
             List<ProfileRole> roleList = Arrays.stream(mapper.getRoles().split(","))
-                    .map(ProfileRole::valueOf)
-                    .toList();
+                .map(ProfileRole::valueOf)
+                .toList();
             profileDTO.setRoleList(roleList);
         }
         profileDTO.setCreatedDate(mapper.getCratedDate());

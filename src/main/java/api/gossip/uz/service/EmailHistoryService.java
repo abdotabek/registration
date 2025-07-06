@@ -5,9 +5,7 @@ import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.SmsType;
 import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.EmailHistoryRepository;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,11 +13,10 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class EmailHistoryService {
 
-    EmailHistoryRepository emailHistoryRepository;
-    ResourceBundleService bundleService;
+    private final EmailHistoryRepository emailHistoryRepository;
+    private final ResourceBundleService bundleService;
 
     public void create(String email, String code, SmsType emailType) {
         EmailHistoryEntity entity = new EmailHistoryEntity();

@@ -19,9 +19,7 @@ import api.gossip.uz.util.JwtUtil;
 import api.gossip.uz.util.PhoneUtil;
 import io.jsonwebtoken.JwtException;
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,20 +32,19 @@ import static api.gossip.uz.enums.ProfileRole.USER;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AuthService {
 
-    ProfileRepository profileRepository;
-    BCryptPasswordEncoder bCryptPasswordEncoder;
-    ProfileRoleService profileRoleService;
-    EmailSendingService emailSendingService;
-    ProfileService profileService;
-    ProfileRoleRepository profileRoleRepository;
-    ResourceBundleService bundleService;
-    SmsSendService smsSendService;
-    SmsHistoryService smsHistoryService;
-    EmailHistoryService emailHistoryService;
-    AttachService attachService;
+    private final ProfileRepository profileRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ProfileRoleService profileRoleService;
+    private final EmailSendingService emailSendingService;
+    private final ProfileService profileService;
+    private final ProfileRoleRepository profileRoleRepository;
+    private final ResourceBundleService bundleService;
+    private final SmsSendService smsSendService;
+    private final SmsHistoryService smsHistoryService;
+    private final EmailHistoryService emailHistoryService;
+    private final AttachService attachService;
 
     public AppResponse<String> registration(RegistrationDTO registrationDTO, AppLanguage language) {
         //1. validation
@@ -117,7 +114,7 @@ public class AuthService {
     }
 
     public ProfileDTO registrationSmsVerification(SmsVerificationDTO smsVerificationDTO, AppLanguage language) {
-            Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(smsVerificationDTO.getPhone());
+        Optional<ProfileEntity> optional = profileRepository.findByUsernameAndVisibleTrue(smsVerificationDTO.getPhone());
         if (optional.isEmpty()) {
             throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.not.found", language));
         }
@@ -136,7 +133,7 @@ public class AuthService {
         if (optional.isEmpty()) {
             throw ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.not.found", language));
         }
-            ProfileEntity profile = optional.get();
+        ProfileEntity profile = optional.get();
         if (GeneralStatus.IN_REGISTRATION != profile.getStatus()) {
             log.info("Registration failed {}", smsResendDTO.getPhone());
             throw ExceptionUtil.throwConflictException(bundleService.getMessage("email.phone.exist", language));

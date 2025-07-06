@@ -9,9 +9,7 @@ import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.SmsType;
 import api.gossip.uz.repository.SmsProviderTokenHolderRepository;
 import api.gossip.uz.util.RandomUtil;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -26,20 +24,19 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
 public class SmsSendService {
 
-    final RestTemplate restTemplate;
-    final SmsProviderTokenHolderRepository smsProviderTokenHolderRepository;
-    final SmsHistoryService smsHistoryService;
-    final ResourceBundleService bundleService;
+    private final RestTemplate restTemplate;
+    private final SmsProviderTokenHolderRepository smsProviderTokenHolderRepository;
+    private final SmsHistoryService smsHistoryService;
+    private final ResourceBundleService bundleService;
     @Value("${eskiz.url}")
-    String smsURL;
+    private String smsURL;
     @Value("${eskiz.login}")
-    String accountLogin;
+    private String accountLogin;
     @Value("${eskiz.password}")
-    String accountPassword;
+    private String accountPassword;
 
 
     private SmsSendResponseDTO sendSms(String phoneNumber, String message, String code, SmsType smsType) {
@@ -96,7 +93,7 @@ public class SmsSendService {
         HttpEntity<SmsRequestDTO> httpEntity = new HttpEntity<>(smsRequestDTO, headers);
         try {
             ResponseEntity<SmsSendResponseDTO> response =
-                    restTemplate.exchange(smsURL + "/message/sms/send", HttpMethod.POST, httpEntity, SmsSendResponseDTO.class);
+                restTemplate.exchange(smsURL + "/message/sms/send", HttpMethod.POST, httpEntity, SmsSendResponseDTO.class);
             return response.getBody();
         } catch (RuntimeException e) {
             log.error("Send sms phone: {}, message: {}", phoneNumber, message);

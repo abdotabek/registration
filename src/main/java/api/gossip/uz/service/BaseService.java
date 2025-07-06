@@ -3,7 +3,6 @@ package api.gossip.uz.service;
 import api.gossip.uz.exception.BadRequestException1;
 import api.gossip.uz.exception.EntityNotFound;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +14,6 @@ import java.util.function.Supplier;
 public class BaseService {
 
     @Lazy
-    @Autowired
     protected ResourceBundleService bundleService;
 
     protected Supplier<EntityNotFound> notFound(final String entity) {

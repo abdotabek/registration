@@ -7,9 +7,7 @@ import api.gossip.uz.util.JwtUtil;
 import api.gossip.uz.util.RandomUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,19 +18,18 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmailSendingService {
 
 
     @Value("${spring.mail.username}")
-    String fromAccount;
+    private String fromAccount;
 
     @Value("${server.domain}")
-    String serverDomain;
+    private String serverDomain;
 
-    final JavaMailSender javaMailSender;
-    final EmailHistoryService emailHistoryService;
-    final ResourceBundleService bundleService;
+    private final JavaMailSender javaMailSender;
+    private final EmailHistoryService emailHistoryService;
+    private final ResourceBundleService bundleService;
 
     public void sendRegistrationEmail(String email, Integer profileId, AppLanguage language) {
         /*    */

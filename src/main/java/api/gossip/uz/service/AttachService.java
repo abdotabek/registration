@@ -4,10 +4,8 @@ import api.gossip.uz.dto.AttachDTO;
 import api.gossip.uz.entity.AttachEntity;
 import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.AttachRepository;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -35,17 +33,16 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AttachService {
 
-    final AttachRepository attachRepository;
-    final ResourceBundleService bundleService;
+    private final AttachRepository attachRepository;
+    private final ResourceBundleService bundleService;
     @Setter
     @Value("${attach.upload.folder}")
-    String folderName;
+    private String folderName;
     @Setter
     @Value("${attach.upload.url}")
-    String attachUrl;
+    private String attachUrl;
 
 
     public AttachDTO upload(MultipartFile multipartFile) {
@@ -97,8 +94,8 @@ public class AttachService {
                 contentType = "application/octet-stream";
             }
             return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .body(resource);
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -113,7 +110,7 @@ public class AttachService {
 
             if (resource.exists() || resource.isReadable()) {
                 return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; fileName=\"" + attachEntity.getOriginName() + "\"").body(resource);
+                    "attachment; fileName=\"" + attachEntity.getOriginName() + "\"").body(resource);
             } else {
                 throw new RuntimeException(bundleService.getMessage("could.not.read"));
             }

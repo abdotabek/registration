@@ -7,9 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
-/*@Service
-@RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)*/
 @Component
 public class ResourceBundleService {
 

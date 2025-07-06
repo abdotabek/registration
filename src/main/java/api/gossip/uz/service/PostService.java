@@ -1,7 +1,11 @@
 package api.gossip.uz.service;
 
 import api.gossip.uz.dto.ProfileDTO;
-import api.gossip.uz.dto.post.*;
+import api.gossip.uz.dto.post.FilterResultDTO;
+import api.gossip.uz.dto.post.PostCreatedDTO;
+import api.gossip.uz.dto.post.PostDTO;
+import api.gossip.uz.dto.post.PostFilterDTO;
+import api.gossip.uz.dto.post.SimilarPostListDTO;
 import api.gossip.uz.dto.profile.PostAdminFilterDTO;
 import api.gossip.uz.entity.PostEntity;
 import api.gossip.uz.enums.GeneralStatus;
@@ -10,9 +14,7 @@ import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.CustomPostRepository;
 import api.gossip.uz.repository.PostRepository;
 import api.gossip.uz.util.SpringSecurityUtil;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,13 +25,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PostService {
 
-    PostRepository postRepository;
-    AttachService attachService;
-    CustomPostRepository customPostRepository;
-    ResourceBundleService bundleService;
+    private final PostRepository postRepository;
+    private final AttachService attachService;
+    private final CustomPostRepository customPostRepository;
+    private final ResourceBundleService bundleService;
 
     public PostDTO create(PostCreatedDTO createdDTO) {
         PostEntity entity = new PostEntity();
@@ -50,19 +51,19 @@ public class PostService {
         Page<PostEntity> postEntities = postRepository.getAllByProfileIdAndVisibleTrue(id, pageRequest);
 
         List<PostDTO> list = postEntities.getContent().stream()
-                .map(this::toDTO)
-                .toList();
+            .map(this::toDTO)
+            .toList();
         return new PageImpl<>(list, pageRequest, postEntities.getTotalElements());
     }
 
     public PostDTO getById(String id) {
         return this.toDTO(postRepository.findById(id).orElseThrow(
-                () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("post.with.id.does.not.exist"))));
+            () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("post.with.id.does.not.exist"))));
     }
 
     public void update(String id, PostCreatedDTO createdDTO) {
         PostEntity postEntity = postRepository.findById(id).orElseThrow(
-                () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("not.found")));
+            () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("not.found")));
         String deletePhotoId = null;
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
 
@@ -73,8 +74,8 @@ public class PostService {
             deletePhotoId = postEntity.getPhotoId();
         }
         postRepository.updatePost(id, createdDTO.getTitle(),
-                createdDTO.getContent(),
-                createdDTO.getPhoto().getId());
+            createdDTO.getContent(),
+            createdDTO.getPhoto().getId());
         if (deletePhotoId != null) {
             attachService.delete(deletePhotoId);
         }
@@ -82,7 +83,7 @@ public class PostService {
 
     public void changeStatus(String id, PostCreatedDTO createdDTO) {
         PostEntity postEntity = postRepository.findById(id).orElseThrow(
-                () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("post.with.id.does.not.exist")));
+            () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("post.with.id.does.not.exist")));
         if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN)) {
             throw new RuntimeException(bundleService.getMessage("not.have.permission"));
         }
@@ -94,7 +95,7 @@ public class PostService {
 
     public void deleteById(String id) {
         PostEntity entity = postRepository.findById(id).orElseThrow(
-                () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("not.found")));
+            () -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("not.found")));
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
         if (!SpringSecurityUtil.hasRole(ProfileRole.ADMIN) && !entity.getProfileId().equals(profileId)) {
             throw new RuntimeException(bundleService.getMessage("not.have.permission"));
@@ -105,17 +106,17 @@ public class PostService {
 
     public PageImpl<PostDTO> filter(PostFilterDTO filterDTO, int page, int size) {
         FilterResultDTO<PostEntity> resultDTO =
-                customPostRepository.filter(filterDTO, page, size);
+            customPostRepository.filter(filterDTO, page, size);
         List<PostDTO> dtoList = resultDTO.getList().stream()
-                .map(this::toDTO).toList();
+            .map(this::toDTO).toList();
         return new PageImpl<>(dtoList, PageRequest.of(page, size), resultDTO.getTotalCount());
     }
 
     public Page<PostDTO> adminFilter(PostAdminFilterDTO filterDTO, int page, int size) {
         FilterResultDTO<Object[]> resultDTO =
-                customPostRepository.filter(filterDTO, page, size);
+            customPostRepository.filter(filterDTO, page, size);
         List<PostDTO> dtoList = resultDTO.getList().stream()
-                .map(this::toDTO).toList();
+            .map(this::toDTO).toList();
         return new PageImpl<>(dtoList, PageRequest.of(page, size), resultDTO.getTotalCount());
     }
 

@@ -6,9 +6,7 @@ import api.gossip.uz.enums.ProfileRole;
 import api.gossip.uz.exception.ExceptionUtil;
 import api.gossip.uz.repository.ProfileRoleRepository;
 import api.gossip.uz.repository.mapper.ProfileRoleMapper;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,12 +14,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ProfileRoleService {
 
-    ProfileRoleRepository profileRoleRepository;
-    ProfileRoleMapper mapper;
-    ResourceBundleService bundleService;
+    private final ProfileRoleRepository profileRoleRepository;
+    private final ProfileRoleMapper mapper;
+    private final ResourceBundleService bundleService;
 
     public ProfileRoleDTO create(Integer profileId, ProfileRole profileRole) {
         if (profileId == null) {
@@ -36,7 +33,7 @@ public class ProfileRoleService {
 
     public ProfileRoleDTO get(Integer id) {
         return profileRoleRepository.findById(id).map(this::toDTO).orElseThrow(()
-                -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.role.with.id.does.not.exist")));
+            -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.role.with.id.does.not.exist")));
     }
 
     public List<ProfileRoleDTO> getList() {
@@ -45,13 +42,13 @@ public class ProfileRoleService {
 
     public ProfileRoleDTO update(Integer id, ProfileRoleDTO profileRoleDTO) {
         profileRoleRepository.findById(id)
-                .map(profileRole -> {
-                    profileRole.setProfileId(profileRoleDTO.getProfileId());
-                    profileRole.setRoles(profileRoleDTO.getRoles());
-                    profileRole.setCreatedDate(LocalDateTime.now());
-                    profileRoleRepository.save(profileRole);
-                    return profileRole.getId();
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.role.with.id.does.not.exist")));
+            .map(profileRole -> {
+                profileRole.setProfileId(profileRoleDTO.getProfileId());
+                profileRole.setRoles(profileRoleDTO.getRoles());
+                profileRole.setCreatedDate(LocalDateTime.now());
+                profileRoleRepository.save(profileRole);
+                return profileRole.getId();
+            }).orElseThrow(() -> ExceptionUtil.throwNotFoundException(bundleService.getMessage("profile.role.with.id.does.not.exist")));
         return profileRoleDTO;
     }
 

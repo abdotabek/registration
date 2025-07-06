@@ -4,9 +4,7 @@ import api.gossip.uz.entity.SmsHistoryEntity;
 import api.gossip.uz.enums.AppLanguage;
 import api.gossip.uz.enums.SmsType;
 import api.gossip.uz.repository.SmsHistoryRepository;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,11 +12,10 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SmsHistoryService {
 
-    SmsHistoryRepository smsHistoryRepository;
-    ResourceBundleService bundleService;
+    private final SmsHistoryRepository smsHistoryRepository;
+    private final ResourceBundleService bundleService;
 
     public void create(String phoneNumber, String message, String code, SmsType smsType) {
         SmsHistoryEntity smsHistoryEntity = new SmsHistoryEntity();
