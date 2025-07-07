@@ -108,6 +108,7 @@ public class ProfileService {
     public AppResponse<String> updatePhoto(String photoId, AppLanguage language) {
         Integer profileId = SpringSecurityUtil.getCurrentProfileId();
         ProfileEntity profile = mapper.toEntity(get(profileId));
+
         profileRepository.updatePhoto(profileId, photoId);
         if (profile.getPhotoId() != null && !profile.getPhotoId().equals(photoId)) {
             attachService.delete(profile.getPhotoId());
@@ -141,6 +142,7 @@ public class ProfileService {
     public PageImpl<ProfileDTO> filter(ProfileFilterDTO filterDTO, int page, int size, AppLanguage language) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<ProfileDetailMapper> filterResult;
+
         if (filterDTO.getQuery() == null) {
             filterResult = profileRepository.customFilter(pageRequest);
         } else {
